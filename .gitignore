@@ -1,0 +1,6 @@
+# Build fragments
+/defaults.json
+/manifest.json
+/dist
+/images
+/_locales

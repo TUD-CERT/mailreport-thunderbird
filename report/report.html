@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/styles.css" type="text/css"></style>
+  </head>
+  <body>
+    <form class="query" autocomplete="off">
+      <p>__MSG_reportCommentPrompt__  <span class="reportAction"></span></p>
+      <input type="text" id="comment" class="large" placeholder="__MSG_reportCommentPlaceholder__" autofocus />
+      <button type="submit">__MSG_reportSubmit__</button>
+    </form>
+    <div class="report pending hide">
+      <div id="spinner"></div>
+      <span>__MSG_reportWait__</span>
+    </div>
+    <div class="report success hide">
+      <span>&#10004;</span>
+      <span>__MSG_reportSuccess__</span>
+    </div>
+    <div class="report error hide">
+      <span>&#10006;</span>
+      <span>__MSG_reportError__</span>
+    </div>
+
+    <script src="/vendor/i18n.js"></script>
+    <script type="module" src="/settings.js"></script>
+    <script type="module" src="/report/report.js"></script>
+  </body>
+</html>

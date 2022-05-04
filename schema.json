@@ -1,0 +1,74 @@
+[
+  {
+    "namespace": "reportSpam",
+    "functions": [
+      {
+        "name": "sendSMTPReport",
+        "type": "function",
+        "description": "Sends a phishing report via SMTP",
+        "async": true,
+        "parameters": [
+          {
+            "name": "identity",
+            "type": "any",
+            "description": "Sender MailIdentity"
+          },
+          {
+            "name": "destination",
+            "type": "string",
+            "description": "Report destination E-Mail address"
+          },
+          {
+            "name": "source",
+            "type": "string",
+            "description": "Sender E-Mail address"
+          },
+          {
+            "name": "subject",
+            "type": "string",
+            "description": "Subject line of the report itself"
+          },
+          {
+            "name": "lucyClientID",
+            "type": "integer",
+            "description": "Lucy client ID",
+            "optional": true
+          },
+          {
+            "name": "message",
+            "type": "object",
+            "description": "The reported E-Mail",
+            "properties": {
+              "date": {"type": "string"},
+              "from": {"type": "string"},
+              "subject": {"type": "string"},
+              "to": {"type": "string"},
+              "isHTML": {"type": "boolean"},
+              "preview": {"type": "string"}
+            }
+          },
+          {
+            "name": "attachments",
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "List of attachments (binary strings)"
+          },
+          {
+            "name": "additionalHeaders",
+            "type": "object",
+            "description": "Additional headers to include in the report",
+            "properties": {
+              "Reporting-Agent": {"type": "string", "optional": true},
+              "Reporting-Plugin": {"type": "string", "optional": true}
+            }
+          },
+          {
+            "name": "comment",
+            "type": "string",
+            "description": "Optional comment"
+          }
+        ]
+      }
+    ]
+  }
+]

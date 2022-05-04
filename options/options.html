@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/styles.css" type="text/css"></style>
+  </head>
+
+  <body>
+    <form>
+      <div>
+        <label>__MSG_optionsActionLabel__&nbsp;</label>
+        <select id="report_action">
+          <option value="junk">__MSG_optionsActionJunk__</option>
+          <option value="trash">__MSG_optionsActionTrash__</option>
+          <option value="keep">__MSG_optionsActionKeep__</option>
+        </select>
+      </div>
+
+      <div class="update hide">
+        <label>__MSG_optionsUpdateLabel__&nbsp;</label>
+        <select id="update_check">
+          <option value="startup">__MSG_optionsUpdateCheckStartup__</option>
+          <option value="never">__MSG_optionsUpdateCheckNever__</option>
+        </select>
+        <button type="button" id="update_check_now" class="inline">__MSG_optionsUpdateCheckNow__</button>
+      </div>
+
+      <div id="show_advanced" class="hide">
+        <input type="checkbox" name="advanced">
+        <label for="advanced">__MSG_optionsShowAdvanced__</label>
+      </div>
+
+      <div class="advanced hide">
+        <label class="update">__MSG_optionsUpdateURL__&nbsp;</label>
+        <input type="url" class="update" id="update_url" pattern="http(s?)://.*" />
+      </div>
+
+      <div class="advanced hide">
+        <label>__MSG_optionsPhishingTransportLabel__&nbsp;</label>
+        <select id="phishing_transport">
+          <option value="http">HTTP(S)</option>
+          <option value="smtp">SMTP</option>
+          <option value="http+smtp">HTTP(S)+SMTP</option>
+        </select>
+      </div>
+
+      <div class="advanced hide">
+        <label>__MSG_optionsSimulationTransportLabel__&nbsp;</label>
+        <select id="simulation_transport">
+          <option value="http">HTTP(S)</option>
+          <option value="smtp">SMTP</option>
+          <option value="http+smtp">HTTP(S)+SMTP</option>
+        </select>
+      </div>
+
+      <div class="advanced hide">
+        <label><strong>Lucy Client-ID</strong></label>
+        <input class="large" type="number" id="lucy_client_id" min="1" max="99" placeholder="optional" />
+      </div>
+    
+      <div class="advanced hide">
+        <label class="http"><strong>HTTP(S):</strong> __MSG_optionsLucyServerLabel__</label>
+        <div class="http">
+          <code>https://</code>
+          <input type="text" id="lucy_server" placeholder="example.com" required />
+          <code>/phishing-report</code>
+        </div>
+      </div>
+
+      <div class="advanced hide">
+        <label class="smtp"><strong>SMTP:</strong> __MSG_optionsSMTPRecipientLabel__</label>
+        <input class="large smtp" type="email" id="smtp_to" placeholder="reports@example.com" required />
+        <input class="smtp" type="checkbox" id="smtp_use_expressive_subject">
+        <label class="smtp" for="advanced">__MSG_optionsSMTPExpressiveSubject__</label>
+      </div>
+  
+      <button type="button" class="advanced hide" id="reset">__MSG_optionsReset__</button>
+      <button type="submit" class="hide">__MSG_save__</button>
+    </form>
+
+    <script src="/vendor/i18n.js"></script>
+    <script type="module" src="/settings.js"></script>
+    <script type="module" src="/options/options.js"></script>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "manifest": {
+    "name": "E-Mail Report Plugin",
+    "version": "1.0",
+    "applications": {
+      "gecko": {
+        "id": "mailreport@example.com"
+      }
+    }
+  },
+  "defaults": {
+    "lucy_client_id": 1,
+    "lucy_server": "example.com",
+    "permit_advanced_config": true,
+    "phishing_transport": "smtp",
+    "simulation_transport": "smtp",
+    "smtp_to": "report@example.com",
+    "smtp_use_expressive_subject": true,
+    "update_check": "never",
+    "update_url": "https://example.com/tb/update"
+  },
+  "locales": {
+    "en": {
+      "extensionDescription": {"message": "Adds a phishing report button to the toolbar. This is just an example configuration, please create your own before deployment."}
+    },
+    "de": {
+      "extensionDescription": {"message": "Fügt einen Phishing-Meldebutton zur Toolbar hinzu. Beispielkonfiguration aktiv, bitte erstellen Sie eine indiduelle Konfiguration vor dem Verteilen dieses Plugins."}
+    }
+  }
+}

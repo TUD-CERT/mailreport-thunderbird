@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/styles.css" type="text/css"></style>
+  </head>
+  <body class="dialog">
+    <div class="up2date hide">
+      <p><strong>__MSG_updateNotificationU2DHeader__</strong></p>
+      <p>__MSG_updateNotificationU2DBody__ <em><span class="plugin"></span></em>: <strong><span class="version"></span></strong></p>
+    </div>
+    <div class="available hide">
+      <p class="success">__MSG_updateNotificationAvailableHeader__</p>
+      <p>__MSG_updateNotificationAvailableBody__ <em><span class="plugin"></span></em>: Version <strong><span class="version"></span></strong>. __MSG_updateNotificationAvailableInstr__ <a class="updateURL"></a>.</p>
+    </div>
+    <div class="exception hide">
+      <p class="error">__MSG_updateNotificationExcpHeader__</p>
+      <p>__MSG_updateNotificationExcpBody__ <em><span class="plugin"></span></em>. __MSG_updateNotificationExcpTryAgain__</p>
+    </div>
+    <button type="button">__MSG_close__</button>
+    <script src="/vendor/i18n.js"></script>
+    <script type="module" src="/update/update_notification.js"></script>
+  </body>
+</html>

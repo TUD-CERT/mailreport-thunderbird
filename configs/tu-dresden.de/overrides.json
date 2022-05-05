@@ -1,6 +1,6 @@
 {
   "manifest": {
-    "name": "TUD-CERT Phishing Report Plugin",
+    "name": "TUD-CERT Phishing Report",
     "version": "22.5.1",
     "applications": {
       "gecko": {

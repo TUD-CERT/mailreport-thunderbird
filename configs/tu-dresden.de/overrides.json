@@ -12,6 +12,7 @@
     "lucy_client_id": 2,
     "lucy_server": "tu-dresdem.de",
     "permit_advanced_config": false,
+    "permit_updates": false,
     "phishing_transport": "smtp",
     "simulation_transport": "http",
     "smtp_to": "cert-meldung@mailbox.tu-dresden.de",

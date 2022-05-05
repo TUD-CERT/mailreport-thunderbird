@@ -44,7 +44,7 @@ export async function checkForUpdate(url, headers, forceFeedback=false) {
     let response = await fetch(url, {method: 'GET', headers: headers, cache: 'no-store'}),
         result = await response.json();
     if(result.hasOwnProperty('version') && result.hasOwnProperty('url')) {
-      if(result.version > currentVersion) await showNotificationView(UPDATE_STATE.AVAILABLE, result.url, result.version);
+      if(result.version !== currentVersion) await showNotificationView(UPDATE_STATE.AVAILABLE, result.url, result.version);
       else if(forceFeedback) await showNotificationView(UPDATE_STATE.UP2DATE, result.url, result.version);
     } else throw true;  // Valid JSON with missing keys
   } catch(e) {

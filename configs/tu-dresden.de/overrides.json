@@ -1,0 +1,36 @@
+{
+  "manifest": {
+    "name": "TUD-CERT Phishing Report Plugin",
+    "version": "22.05.1",
+    "applications": {
+      "gecko": {
+        "id": "phishreport@cert.tu-dresden.de"
+      }
+    }
+  },
+  "defaults": {
+    "lucy_client_id": 2,
+    "lucy_server": "tu-dresdem.de",
+    "permit_advanced_config": false,
+    "phishing_transport": "smtp",
+    "simulation_transport": "http",
+    "smtp_to": "cert-meldung@mailbox.tu-dresden.de",
+    "smtp_use_expressive_subject": true,
+    "update_check": "never",
+    "update_url": ""
+  },
+  "locales": {
+    "en": {
+      "extensionDescription": {"message": "Adds a phishing report button to the toolbar. This plugin is in the testing phase. Please report bugs and other issues to pascal.brueckner@tu-dresden.de"},
+      "reportButtonHelp": {"message": "Reports suspicious emails. Select the email and then click this button to forward it to the TUD-CERT."},
+      "reportCommentPrompt": {"message": "The selected E-Mail will be forwarded to TUD-CERT."},
+      "simulationAckTitlePreface": {"message": "TUD-CERT E-Mail Report"}
+    },
+    "de": {
+      "extensionDescription": {"message": "Fügt einen Phishing-Meldebutton zur Toolbar hinzu. Dieses Plugin befindet sich in der Testphase. Bitte melden Sie auftretende Bugs und Probleme an pascal.brueckner@tu-dresden.de"},
+      "reportButtonHelp": {"message": "Meldet die derzeit ausgewählte E-Mail an das TUD-CERT"},
+      "reportCommentPrompt": {"message": "Die markierte E-Mail wird an das TUD-CERT weitergeleitet."},
+      "simulationAckTitlePreface": {"message": "Meldung an TUD-CERT"}
+    }
+  }
+}

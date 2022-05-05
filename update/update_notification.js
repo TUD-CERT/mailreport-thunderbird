@@ -2,7 +2,7 @@ let bgPort = browser.runtime.connect({name: 'update'});
 
 document.addEventListener('DOMContentLoaded', async () => {
   for(const s of document.querySelectorAll('span.plugin'))
-    s.innerHTML = browser.runtime.getManifest().name;
+    s.textContent = browser.runtime.getManifest().name;
 
   // View selection
   let url = new URL(window.location.href),
@@ -11,10 +11,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       p_version = url.searchParams.get('version'),
       $updateURL = document.querySelector(`a.updateURL`);
   document.querySelector(`body > div${p_state}`).classList.remove('hide');
-  $updateURL.innerHTML = p_url;
+  $updateURL.textContent = p_url;
   $updateURL.setAttribute('href', p_url);
   for(const s of document.querySelectorAll(`span.version`)) 
-    s.innerHTML = p_version;
+    s.textContent = p_version;
 
   // Update link handler -> open URL in new tab and close notification window
   $updateURL.addEventListener('click', (e) => {

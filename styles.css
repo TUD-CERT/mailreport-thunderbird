@@ -5,6 +5,7 @@ form {border: none}
 form input {margin-bottom: .5em}
 form input.large {box-sizing: border-box; width: 100%}
 form > div, button + button {margin-top: .5em}
+form.query p {white-space: pre}
 form input[type="checkbox"] {margin-left: 0}
 input[type="checkbox"] + label {position: relative; top: -2px}
 button {width: 100%; text-align: center}

@@ -37,10 +37,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   let $reportAction = document.querySelector('span.reportAction');
   switch((await getSettings(browser)).report_action) {
     case REPORT_ACTIONS.JUNK:
-      $reportAction.innerHTML = '<br />' + browser.i18n.getMessage('reportCommentJunk');
+      $reportAction.textContent = '\n' + browser.i18n.getMessage('reportCommentJunk');
       break;
     case REPORT_ACTIONS.TRASH:
-      $reportAction.innerHTML = '<br />' + browser.i18n.getMessage('reportCommentTrash');
+      $reportAction.textContent = '\n' + browser.i18n.getMessage('reportCommentTrash');
       break;
   }
 });

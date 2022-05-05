@@ -107,7 +107,7 @@ def make_config(config: str) -> str:
   shutil.copytree(template_img_path, OUT_IMAGES_PATH)
   if os.path.isdir(override_img_path):
     shutil.copytree(override_img_path, OUT_IMAGES_PATH, dirs_exist_ok=True)
-  return manifest['applications']['gecko']['id']
+  return f'{manifest["applications"]["gecko"]["id"]}-{manifest["version"]}'
 
 
 def make_dist(name: str) -> None:

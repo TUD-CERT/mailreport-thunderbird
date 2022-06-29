@@ -86,7 +86,10 @@ var reportSpam = class extends ExtensionCommon.ExtensionAPI {
             converter.charset = 'UTF-8';
             let inStream = converter.convertToInputStream(a);
             await asyncCopyWrapper(inStream, outStream);
-            attachment.url = Services.io.getProtocolHandler("file").QueryInterface(Ci.nsIFileProtocolHandler).getURLSpecFromFile(file);
+            // Starting with TB92, getURLSpecFromFile() has been replaced by getURLSpecFromActualFile()
+            let fileProtocolHandler = Services.io.getProtocolHandler('file').QueryInterface(Ci.nsIFileProtocolHandler),
+                getURLSpecFromFileFunc = fileProtocolHandler.hasOwnProperty('getURLSpecFromActualFile') ? 'getURLSpecFromActualFile' : 'getURLSpecFromFile';
+            attachment.url = fileProtocolHandler[getURLSpecFromFileFunc](file);
             attachment.name = 'Forwarded message.eml';
             attachment.size = file.fileSize;
             attachment.contentType = 'application/octet-stream';

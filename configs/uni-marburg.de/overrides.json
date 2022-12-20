@@ -1,10 +1,10 @@
 {
   "manifest": {
     "name": "HRZ-Virenwarndienst Phishing Report",
-    "version": "22.12.15",
+    "version": "22.12.20",
     "applications": {
       "gecko": {
-        "id": "virenwarndienst@hrz.uni-marburg.de"
+        "id": "report-spam@hrz.uni-marburg.de"
       }
     }
   },
@@ -15,23 +15,23 @@
     "permit_updates": false,
     "phishing_transport": "smtp",
     "simulation_transport": "",
-    "smtp_to": "virenwarndienst@hrz.uni-marburg.de",
+    "smtp_to": "report-spam@hrz.uni-marburg.de",
     "smtp_use_expressive_subject": true,
     "update_check": "never",
     "update_url": ""
   },
   "locales": {
     "en": {
-      "extensionDescription": {"message": "Adds a phishing report button to the toolbar to report suspicious E-Mails to HRZ-Virenwarndienst."},
-      "reportButtonHelp": {"message": "Reports suspicious emails. Select the email and then click this button to forward it to HRZ-Virenwarndienst."},
-      "reportCommentPrompt": {"message": "The selected E-Mail will be forwarded to HRZ-Virenwarndienst."},
-      "simulationAckTitlePreface": {"message": "HRZ-Virenwarndienst E-Mail Report"}
+      "extensionDescription": {"message": "Adds a phishing report button to the toolbar to report suspicious E-Mails to HRZ."},
+      "reportButtonHelp": {"message": "Reports suspicious emails. Select the email and then click this button to forward it to HRZ."},
+      "reportCommentPrompt": {"message": "The selected E-Mail will be forwarded to HRZ."},
+      "simulationAckTitlePreface": {"message": "HRZ E-Mail Report"}
     },
     "de": {
-      "extensionDescription": {"message": "Fügt einen Phishing-Meldebutton zur Toolbar hinzu, mit dem verdächtige E-Mails an das HRZ-Virenwarndienst gemeldet werden können."},
-      "reportButtonHelp": {"message": "Meldet die derzeit ausgewählte E-Mail an das HRZ-Virenwarndienst"},
-      "reportCommentPrompt": {"message": "Die markierte E-Mail wird an das HRZ-Virenwarndienst weitergeleitet."},
-      "simulationAckTitlePreface": {"message": "Meldung an HRZ-Virenwarndienst"}
+      "extensionDescription": {"message": "Fügt einen Phishing-Meldebutton zur Toolbar hinzu, mit dem verdächtige E-Mails an das HRZ gemeldet werden können."},
+      "reportButtonHelp": {"message": "Meldet die derzeit ausgewählte E-Mail an das HRZ"},
+      "reportCommentPrompt": {"message": "Die markierte E-Mail wird an das HRZ weitergeleitet."},
+      "simulationAckTitlePreface": {"message": "Meldung an HRZ"}
     }
   }
 }

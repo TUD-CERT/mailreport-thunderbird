@@ -13,6 +13,7 @@
     "lucy_server": "tu-dresdem.de",
     "permit_advanced_config": false,
     "permit_updates": false,
+    "permitted_domains": [".*tu-dresden\\.de", "hfmdd\\.de"],
     "phishing_transport": "smtp",
     "simulation_transport": "http",
     "smtp_to": "cert-meldung@mailbox.tu-dresden.de",
@@ -25,12 +26,14 @@
       "extensionDescription": {"message": "Adds a phishing report button to the toolbar to report suspicious E-Mails to TUD-CERT."},
       "reportButtonHelp": {"message": "Reports suspicious emails. Select the email and then click this button to forward it to TUD-CERT."},
       "reportCommentPrompt": {"message": "The selected E-Mail will be forwarded to TUD-CERT."},
+      "reportForbidden": {"message": "Only e-mail accounts affiliated with TU Dresden are authorized to report e-mails."},
       "simulationAckTitlePreface": {"message": "TUD-CERT E-Mail Report"}
     },
     "de": {
       "extensionDescription": {"message": "Fügt einen Phishing-Meldebutton zur Toolbar hinzu, mit dem verdächtige E-Mails an das TUD-CERT gemeldet werden können."},
       "reportButtonHelp": {"message": "Meldet die derzeit ausgewählte E-Mail an das TUD-CERT"},
       "reportCommentPrompt": {"message": "Die markierte E-Mail wird an das TUD-CERT weitergeleitet."},
+      "reportForbidden": {"message": "Ausschließlich E-Mail-Konten der TU Dresden sind zum Melden von E-Mails berechtigt."},
       "simulationAckTitlePreface": {"message": "Meldung an TUD-CERT"}
     }
   }

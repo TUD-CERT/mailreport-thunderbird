@@ -3,6 +3,7 @@
   "lucy_server": "",
   "permit_advanced_config": true,
   "permit_updates": true,
+  "permitted_domains": [],
   "phishing_transport": "http",
   "report_action": "junk",
   "send_telemetry": true,

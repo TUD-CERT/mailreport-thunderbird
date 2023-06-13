@@ -1,3 +1,4 @@
+import { getIdentity } from '/common.js';
 import { REPORT_ACTIONS, getSettings } from '/settings.js';
 
 let bgPort = browser.runtime.connect({name: 'report'});
@@ -27,12 +28,37 @@ async function getReportedMessageID() {
   }
 }
 
+/**
+ * Checks whether a report for the given message ID is permitted by retrieving the associated account's
+ * identities and validating it against the given list of permitted domains.
+ */
+async function isMessageReportPermitted(messageID, permittedDomains) {
+  let message = await browser.messages.get(messageID),
+      identity = await getIdentity(message);
+  // Pseudo accounts such as "Local Folders" don't have associated identities
+  if(identity === null) return false;
+  // If no domains were given, reporting is always permitted
+  if(permittedDomains.length === 0) return true;
+  // Attempt to find a permitted identity to report the message
+  let account = await browser.accounts.get(identity.accountId);
+  for(let domain of permittedDomains) {
+    let domainRegex = new RegExp(domain);
+    for(let identity of account.identities) {
+      if(domainRegex.test(identity.email.split('@')[1])) return true;
+    }
+  }
+  return false;
+}
+
 // Incoming messages from the background script are meant to show a specific view
 bgPort.onMessage.addListener((m) => {
   showView(m.view);
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // Disable reporting functionality in case no permitted account is registered
+  let permittedDomains = (await getSettings(browser)).permitted_domains;
+  if(!(await isMessageReportPermitted(await getReportedMessageID(), permittedDomains))) showView(".forbidden");
   // Displays the reporting action depending on current settings
   let $reportAction = document.querySelector('span.reportAction');
   switch((await getSettings(browser)).report_action) {

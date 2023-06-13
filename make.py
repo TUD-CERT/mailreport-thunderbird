@@ -116,7 +116,15 @@ def make_dist(name: str) -> None:
   shutil.rmtree(OUT_DIST_PATH, ignore_errors=True)
   os.makedirs(OUT_DIST_PATH)
   with zipfile.ZipFile(target, 'w') as zf:
-    for f in ['background.html', 'background.js', 'defaults.json', 'implementation.js', 'manifest.json', 'schema.json', 'settings.js', 'styles.css']:
+    for f in ['background.html',
+              'background.js',
+              'common.js',
+              'defaults.json',
+              'implementation.js',
+              'manifest.json',
+              'schema.json',
+              'settings.js',
+              'styles.css']:
       zf.write(f)
     for d in ['images', '_locales', 'options', 'report', 'update', 'vendor']:
       for path, _, files in os.walk(d):

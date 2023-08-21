@@ -1,6 +1,7 @@
 .hide {display: none !important}
 .success {color: forestgreen; font-weight: bold; margin: 1em}
 .error {color: crimson; font-weight: bold; margin: 1em}
+body.options {min-height: 10rem}  /* vertical space for select dropdowns */
 form {border: none}
 form input {margin-bottom: .5em}
 form input.large {box-sizing: border-box; width: 100%}

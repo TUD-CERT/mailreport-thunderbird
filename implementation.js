@@ -4,18 +4,8 @@ var { ExtensionCommon } = ChromeUtils.import('resource://gre/modules/ExtensionCo
 var { FileUtils } = ChromeUtils.import('resource://gre/modules/FileUtils.jsm');
 var { NetUtil } = ChromeUtils.import('resource://gre/modules/NetUtil.jsm');
 var Services = globalThis.Services || ChromeUtils.import('resource://gre/modules/Services.jsm').Services;
-
-
-/**
- * Turns NetUtil.asyncCopy() into a Promise.
- */
-async function asyncCopyWrapper(source, destination) {
-  return await new Promise((resolve, reject) => {
-    NetUtil.asyncCopy(source, destination, () => {
-      resolve();
-    });
-  });
-}
+var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+XPCOMUtils.defineLazyGlobalGetters(this, ["IOUtils"]);
 
 
 /**
@@ -39,6 +29,19 @@ function objToStr(source, delimiter) {
  */
 function encodeHTML(str) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+
+/**
+ * Helper that converts an ASCII string to an Uint8Array instance
+ * due to TextEncoder not being available in the WebExtension plugin context.
+ */
+function asciiToUint8Array(str) {
+    const result = [];
+    for (let i = 0; i < str.length; i++) {
+        result.push(str.charCodeAt(i));
+    }
+    return new Uint8Array(result);
 }
 
 
@@ -74,19 +77,24 @@ var reportSpam = class extends ExtensionCommon.ExtensionAPI {
             compFields.useMultipartAlternative = false;
           }
           // Attachments
-          let tmp_files = []
+          let tmp_files = [],
+              tmp_file_path = null;
           for(let a of attachments) {
-            let attachment = Components.classes['@mozilla.org/messengercompose/attachment;1'].createInstance(Ci.nsIMsgAttachment),
-                converter = Components.classes['@mozilla.org/intl/scriptableunicodeconverter'].createInstance(Ci.nsIScriptableUnicodeConverter);
+            let attachment = Components.classes['@mozilla.org/messengercompose/attachment;1'].createInstance(Ci.nsIMsgAttachment);
             // Add attachment by copying it into a temporary file and referencing that for addAttachment()
-            let file = FileUtils.getFile('TmpD', [`tb.tmp.${Date.now()}`]);
+            // Starting with TB115, OS.* has been replaced with PathUtils.*
+            const tmp_file_name = `tb.tmp.${Date.now()}`;
+            if(typeof PathUtils !== "undefined") {
+              tmp_file_path = PathUtils.join(PathUtils.tempDir, tmp_file_name);
+            } else {
+              const { OS } = ChromeUtils.import('resource://gre/modules/osfile.jsm');
+              tmp_file_path = OS.Path.join(OS.Constants.Path.tmpDir, tmp_file_name);
+            }
+            await IOUtils.write(tmp_file_path, asciiToUint8Array(a));
+            // Starting with TB116, FileUtils.getFile() has been replaced with FileUtils.File()
+            const file = FileUtils.hasOwnProperty('getFile') ? FileUtils.getFile('TmpD', [tmp_file_name]) : FileUtils.File(tmp_file_path) ;
             tmp_files.push(file);
-            file.createUnique(Ci.nsIFile.NORMAL_FILE_TYPE, FileUtils.PERMS_FILE);
-            let outStream = FileUtils.openSafeFileOutputStream(file);
-            converter.charset = 'UTF-8';
-            let inStream = converter.convertToInputStream(a);
-            await asyncCopyWrapper(inStream, outStream);
-            // Starting with TB92, getURLSpecFromFile() has been replaced by getURLSpecFromActualFile()
+            // Starting with TB92, getURLSpecFromFile() has been replaced with getURLSpecFromActualFile()
             let fileProtocolHandler = Services.io.getProtocolHandler('file').QueryInterface(Ci.nsIFileProtocolHandler),
                 getURLSpecFromFileFunc = fileProtocolHandler.hasOwnProperty('getURLSpecFromActualFile') ? 'getURLSpecFromActualFile' : 'getURLSpecFromFile';
             attachment.url = fileProtocolHandler[getURLSpecFromFileFunc](file);

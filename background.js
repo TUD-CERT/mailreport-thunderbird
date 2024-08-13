@@ -174,7 +174,14 @@ async function moveMessageTo(message, folder) {
   // Infer account from message
   let account = await browser.accounts.get(message.folder.accountId),
       targetFolder = getFolderForAccount(account, folder);
-  if(targetFolder != null) await browser.messages.move([message.id], targetFolder);
+  if(targetFolder !== null) {
+    // Starting with TB128, browser.messages.move() expects a MailFolderId instead of a MailFolder
+    try {
+      await browser.messages.move([message.id], targetFolder.id);
+    } catch(err) {
+      await browser.messages.move([message.id], targetFolder);
+    }
+  }
   console.log(`Moving message ${message.id} to ${folder} folder`);
 }
 

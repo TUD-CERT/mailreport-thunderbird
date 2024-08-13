@@ -1,7 +1,7 @@
 {
   "manifest": {
     "name": "TUD-CERT Phishing Report",
-    "version": "23.8.1",
+    "version": "24.8.1",
     "applications": {
       "gecko": {
         "id": "phishreport@cert.tu-dresden.de"

@@ -14,7 +14,7 @@ Mozilla Thunderbird plugin for reporting phishing or otherwise malicious E-Mails
 * [Lucy](https://lucysecurity.com) phishing campaign detection
 
 ## Requirements
-The plugin has been developed and tested with Thunderbird 78 and should work on all versions newer than that.
+The plugin has been tested with Thunderbird 91 and newer on Linux and Windows.
 
 The project build script `make.py` requires at least Python 3.8.
 

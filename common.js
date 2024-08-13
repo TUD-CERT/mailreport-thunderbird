@@ -16,7 +16,6 @@ export async function getIdentity(messageHeader) {
     }
     if(identity !== null) return identity;
   }
-  // Return default identity (starting from TB91, use browser.identities)
-  if(browser.hasOwnProperty('identities')) return browser.identities.getDefault(accountId);
-  else return browser.accounts.getDefaultIdentity(accountId)
+  // Return default identity
+  return browser.identities.getDefault(accountId);
 }

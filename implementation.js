@@ -117,15 +117,14 @@ var reportSpam = class extends ExtensionCommon.ExtensionAPI {
                   }
                 }
               });
-              // In TB86 and newer, this function was renamed from SendMsg to sendMsg
-              let sendFunc = compose.hasOwnProperty('SendMsg') ? 'SendMsg' : 'sendMsg';
-              compose[sendFunc](Ci.nsIMsgCompDeliverMode.Now, amIdentity, identity.accountId, null, progress);
+              compose.sendMsg(Ci.nsIMsgCompDeliverMode.Now, amIdentity, identity.accountId, null, progress);
+
             });
             success = true;
           } catch(err) {
             console.log('Could not send report via SMTP');
           }
-          // Clean up tmp files (workaround required for TB78 even though attachment.temporary is true)
+          // Clean up tmp files (workaround required for TB91 even though attachment.temporary is true)
           for(let f of tmp_files) if(f.exists()) f.remove(false);
           return success;
         }

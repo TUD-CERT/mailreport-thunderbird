@@ -1,10 +1,20 @@
 // strict mode should be default
 'use strict';
-var { ExtensionCommon } = ChromeUtils.import('resource://gre/modules/ExtensionCommon.jsm');
-var { FileUtils } = ChromeUtils.import('resource://gre/modules/FileUtils.jsm');
-var { NetUtil } = ChromeUtils.import('resource://gre/modules/NetUtil.jsm');
-var Services = globalThis.Services || ChromeUtils.import('resource://gre/modules/Services.jsm').Services;
-var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+try {
+    var { ExtensionCommon } = ChromeUtils.importESModule('resource://gre/modules/ExtensionCommon.sys.mjs');
+    var { FileUtils } = ChromeUtils.importESModule('resource://gre/modules/FileUtils.sys.mjs');
+    var { NetUtil } = ChromeUtils.importESModule('resource://gre/modules/NetUtil.sys.mjs');
+    var Services = globalThis.Services || ChromeUtils.importESModule('resource://gre/modules/Services.sys.mjs').Services;
+    var { XPCOMUtils } = ChromeUtils.importESModule("resource://gre/modules/XPCOMUtils.sys.mjs");
+}
+catch(err) {
+    // fall back to legacy (pre v128) import
+    var { ExtensionCommon } = ChromeUtils.import('resource://gre/modules/ExtensionCommon.jsm');
+    var { FileUtils } = ChromeUtils.import('resource://gre/modules/FileUtils.jsm');
+    var { NetUtil } = ChromeUtils.import('resource://gre/modules/NetUtil.jsm');
+    var Services = globalThis.Services || ChromeUtils.import('resource://gre/modules/Services.jsm').Services;
+    var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
+}
 XPCOMUtils.defineLazyGlobalGetters(this, ["IOUtils"]);
 
 

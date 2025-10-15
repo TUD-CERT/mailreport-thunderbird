@@ -85,7 +85,8 @@ The remaining supported keys in `defaults` are
   * `"junk"`: Move it to the junk folder.
   * `"trash"`: Move it to the trash folder.
   * `"keep"`: Do nothing, keep it.
-* **smtp_use_expressive_subject**: Determines which subject line to use when sending SMTP reports. If set to `false`, reports will simply use *Phishing Report* as subject line. With this set to `true`, the subject line of the reported E-Mail will be appended as well (e.g. *Phishing Report: Re: Urgent Letter*).
+* **spam_report_enabled**: Whether users are permitted to report e-mails as *spam* in addition to the regular *phishing/fraud* reports. If set to `true`, a click on the reporting button will first show a menu prompting for the reporting type. If this is `false`, a click on the reporting button will show the `phishing/fraud` report popup immediately.
+* **smtp_use_expressive_subject**: Determines which subject line to use when sending SMTP reports. If set to `false`, reports will simply use *Phishing Report* or *Spam Report* as subject lines. With this set to `true`, the subject line of the reported e-mail will be appended as well (e.g. *Phishing Report: Re: Urgent Letter*).
 * **send_telemetry**: If set to `true`, this includes two header fields `Reporting-Agent` and `Reporting-Plugin` set to the current MUA and plugin identifier/version to all outgoing requests: Either as HTTP(S) header or prepended to the SMTP body. To disable, set to `false`. This setting can *not* be changed from within Thunderbird.
 * **permit_updates**: If set to `true`, update notifications are enabled. Further details on how these are implemented are documented down below. To disable update checks and notifications entirely, set this to `false`. This setting can *not* be changed from within Thunderbird.
 * **update_check**: When to automatically check for updates.

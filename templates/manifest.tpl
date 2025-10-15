@@ -28,9 +28,10 @@
     "default_label": "__MSG_reportButtonLabel__",
     "default_title": "__MSG_reportButtonHelp__",
     "default_popup": "report/report.html",
-    "default_icon" : "images/app_16.png"
+    "default_icon" : "images/app_16.png",
+    "type": "button"
   },
-  "permissions": ["storage", "tabs", "messagesRead", "messagesMove", "accountsRead", "<all_urls>"],
+  "permissions": ["accountsRead", "menus", "messagesMove", "messagesRead", "storage", "tabs", "<all_urls>"],
   "experiment_apis": {
     "reportSpam": {
       "schema": "schema.json",

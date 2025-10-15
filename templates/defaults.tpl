@@ -10,6 +10,7 @@
   "simulation_transport": "http",
   "smtp_to": "",
   "smtp_use_expressive_subject": false,
+  "spam_report_enabled": true,
   "update_check": "never",
   "update_url": "",
   "use_toolbar_button": false

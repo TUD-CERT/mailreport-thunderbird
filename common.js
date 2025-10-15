@@ -19,3 +19,22 @@ export async function getIdentity(messageHeader) {
   // Return default identity
   return browser.identities.getDefault(accountId);
 }
+
+/**
+ * Returns the ID of the message to report, depending on what kind of tab is currently active.
+ * The reported message is either the currently shown message or in case of the message list,
+ * the top-most currently selected message.
+ */
+export async function getReportedMessageID() {
+  let tabs = await browser.tabs.query({active: true, windowType: 'normal', windowId: (await browser.windows.getLastFocused()).id});
+  if(tabs.length !== 1) throw `Error: Couldn\'t find active tab (got ${tabs.length} candidates)`;
+  let activeTab = tabs[0];
+  if(activeTab.mailTab) {
+    // 3-pane tab (folders/mails/message)
+    return (await browser.mailTabs.getSelectedMessages(activeTab.id)).messages[0].id;
+  } else {
+    // Single message display tab
+    return (await browser.messageDisplay.getDisplayedMessage(activeTab.id)).id;
+  }
+}
+

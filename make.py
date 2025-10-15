@@ -75,6 +75,7 @@ def create_manifest(template: Dict, overrides: Dict, config: Dict) -> Dict:
   manifest = update_template(template, overrides)
   action = 'browser_action' if config['use_toolbar_button'] else 'message_display_action'
   manifest[action] = manifest.pop('action')
+  manifest[action]["type"] = 'menu' if config['spam_report_enabled'] else 'button'
   return manifest
 
 

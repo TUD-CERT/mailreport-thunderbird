@@ -1,4 +1,4 @@
-import { getIdentity } from '/common.js';
+import { getIdentity, getReportedMessageID } from '/common.js';
 import { REPORT_ACTIONS, TRANSPORTS, UPDATE_CHECK, getSettings } from '/settings.js';
 import { checkForUpdate } from '/update/check.js';
 
@@ -10,8 +10,32 @@ export const STATE = {
   ERROR: '.error' 
 }
 let reportViewPort = null,
+    reportViewConnectedPromise = null,
     simAckWindow = null;
 
+
+/**
+ * Async wrapper for menus.create.
+ */
+async function addMenuEntry(createData) {
+  let { promise, resolve, reject } = Promise.withResolvers();
+  let error;
+  let id = browser.menus.create(createData, () => { 
+    error = browser.runtime.lastError; // Either null or an Error object.
+    if (error) {
+      reject(error)
+    } else {
+      resolve();
+    }
+  });
+  try {
+    await promise;
+    console.info(`Successfully created menu entry <${id}>`);
+  } catch (error) {
+      console.error("Failed to create menu entry:", createData, error);
+  }
+  return id;
+}
 
 /**
  * Checks the given MessagePart for Lucy headers that indicate the mail is part of a phishing simulation.
@@ -69,7 +93,7 @@ async function sendHTTPReport(urls, email, messageRaw, additionalHeaders, lucySc
         lucyReport.scenario_id = lucyScenarioID;
         console.log('Reporting simulation for scenario ', lucyScenarioID, ' as ', email, ' via HTTP(S) to ', url);
       } else console.log('Reporting phishing mail as ', email, ' via HTTP(S) to ', url);
-      var request = new XMLHttpRequest();
+      let request = new XMLHttpRequest();
       // Send report
       await fetch(url, {
         method: 'POST', 
@@ -200,9 +224,9 @@ async function getAdditionalHeaders(settings) {
 }
 
 /**
- * Reports an E-Mail via its internal identifier and sends a report with the given user-supplied comment.
+ * Reports an E-Mail as fraud via its internal identifier and sends a report with the given user-supplied comment.
  */
-async function reportMail(messageID, comment) {
+async function reportFraud(messageID, comment) {
   updateReportView(STATE.PENDING);
   
   // Retrieve currently selected mails as list
@@ -259,22 +283,86 @@ async function reportMail(messageID, comment) {
   }
 }
 
+/**
+ * Reports an E-Mail as spam via its internal identifier.
+ * Requires a configured SMTP or HTTPSMTP transport, reporting via HTTP is currently not supported.
+ */
+async function reportSpam(messageID) {
+  updateReportView(STATE.PENDING);
+
+  // Retrieve currently selected mails as list
+  let message = await browser.messages.get(messageID),
+      messagePart = await browser.messages.getFull(messageID),
+      messageRaw = await browser.messages.getRaw(messageID),
+      settings = await getSettings(browser),
+      identity = await getIdentity(message),
+      transport = settings.phishing_transport,
+      additionalHeaders = await getAdditionalHeaders(settings),
+      success = true;
+
+  if(belongsToSimulation(messagePart)) {
+    await reportFraud(messageID, "");
+    // Users expect reported spam mails to be moved away even if REPORT_ACTIONS is KEEP
+    if (settings.report_action === REPORT_ACTIONS.KEEP) await moveMessageTo(message, REPORT_ACTIONS.JUNK);
+    return;
+  }
+  if(transport === TRANSPORTS.HTTP) {
+    console.log("Error: HTTP endpoint does not support spam reports");
+    return false;
+  }
+  let reportedSubject = findSubject(messagePart, message),
+      messageData = { date: message.date.toString(),
+        from: message.author,
+        subject: reportedSubject,
+        to: message.recipients.join(', '),
+        isHTML: false,
+        preview: ''},  // API schema requires strings instead of null
+      previewPart = findPreviewMessagePart(messagePart),
+      subject = 'Spam Report';
+  if(settings.smtp_use_expressive_subject) subject += `: ${reportedSubject}`;
+  if(previewPart !== null) {
+    messageData.preview = previewPart.body;
+    messageData.isHTML = previewPart.contentType.includes('text/html');
+  }
+  success = await browser.reportSpam.sendSMTPReport(identity,
+      settings.smtp_to,
+      identity.email,
+      subject,
+      settings.lucy_client_id,
+      messageData,
+      [messageRaw],
+      additionalHeaders,
+      "");
+  updateReportView(success ? STATE.SUCCESS : STATE.ERROR);
+  await moveMessageTo(message, settings.report_action);
+}
+
+/**
+ * Stalls the caller until the connection to an opened report view has been successfully established.
+ */
+async function reportViewConnected() {
+  if(reportViewConnectedPromise === null) reportViewConnectedPromise = Promise.withResolvers();
+  await reportViewConnectedPromise.promise;
+}
+
 // Main request dispatcher (background scripts <-> views)
 browser.runtime.onConnect.addListener((port) => {
   switch(port.name) {
     case 'report':
       reportViewPort = port;
+      if(reportViewConnectedPromise !== null) reportViewConnectedPromise.resolve();
       // Report request
       reportViewPort.onMessage.addListener(async (m) => {
         switch(m.action) {
-          case 'report':
-            await reportMail(m.mailID, m.comment);
+          case 'report_fraud':
+            await reportFraud(m.mailID, m.comment);
             break;
         }
       });
       // Disconnect when report view closes
       reportViewPort.onDisconnect.addListener(() => {
         reportViewPort = null;
+        reportViewConnectedPromise = null;
       });
       break;
     case 'simulation_ack':
@@ -310,14 +398,38 @@ window.addEventListener('message', async (e) => {
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
+  const settings = await getSettings(browser);
+
   // Check for updates on startup (if configured to do so)
   setTimeout(async () => {
-    let settings = await getSettings(browser);
     if(settings.update_check === UPDATE_CHECK.STARTUP) {
       console.log('Performing automatic update check');
       await checkForUpdate(settings.update_url, await getAdditionalHeaders(settings));
     }
   }, 5000);
+
+  // Add a menu in case spam reports are enabled
+  if(settings.spam_report_enabled) {
+    // Populate button menu
+    await addMenuEntry({
+      id: "report-fraud",
+      contexts: ["browser_action_menu", "message_display_action_menu"],
+      title: "Report as phishing/fraud..."
+    })
+    await addMenuEntry({
+      id: "report-spam",
+      contexts: ["browser_action_menu", "message_display_action_menu"],
+      title: "Report as spam"
+    })
+    const actionAPI = settings.use_toolbar_button ? 'browserAction' : 'messageDisplayAction';
+    browser.menus.onClicked.addListener(async (info, tab) => {
+      browser[actionAPI].openPopup();
+      if(info.menuItemId === "report-spam") {
+        await reportViewConnected();
+        await reportSpam(await getReportedMessageID());
+      }
+    })
+  }
 
   // In case a global toolbar report button is used ("browser action"), add event listeners to enable/disable it depending on UI state
   if((await getSettings(browser)).use_toolbar_button) {

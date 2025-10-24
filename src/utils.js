@@ -1,10 +1,19 @@
 /**
- * Returns the MailIdentity the given MessageHeader was received with (based on the message's folder and headers).
+ * Given the ID of a MailIdentity, this returns the associated MailAccount.
+ */
+export async function getAccountOfIdentity(identityID) {
+  const identity = await browser.identities.get(identityID);
+  return await browser.accounts.get(identity.accountId);
+
+}
+
+/**
+ * Returns the MailIdentity the given MessageHeader was received with (based on the message"s folder and headers).
  */
 export async function getIdentity(messageHeader) {
-  let accountId = messageHeader.folder.accountId,
-      account = await browser.accounts.get(accountId),
-      identity = null;
+  const accountId = messageHeader.folder.accountId,
+        account = await browser.accounts.get(accountId);
+  let identity = null;
   // If an identity matches a recpient, use it. Otherwise, rely on the default identity of that folder.
   for(let idt of account.identities) {
     for(let recp of messageHeader.recipients) {
@@ -21,12 +30,16 @@ export async function getIdentity(messageHeader) {
 }
 
 /**
- * Returns the ID of the message to report, depending on what kind of tab is currently active.
- * The reported message is either the currently shown message or in case of the message list,
+ * Returns the ID of the currently selected message, depending on what kind of tab is currently active.
+ * That message is either the currently shown one or in case of the message list,
  * the top-most currently selected message.
  */
-export async function getReportedMessageID() {
-  let tabs = await browser.tabs.query({active: true, windowType: 'normal', windowId: (await browser.windows.getLastFocused()).id});
+export async function getCurrentMessageID() {
+  let tabs = await browser.tabs.query({
+    active: true,
+    windowType: "normal",
+    windowId: (await browser.windows.getLastFocused()).id
+  });
   if(tabs.length !== 1) throw `Error: Couldn\'t find active tab (got ${tabs.length} candidates)`;
   let activeTab = tabs[0];
   if(activeTab.mailTab) {
@@ -37,4 +50,3 @@ export async function getReportedMessageID() {
     return (await browser.messageDisplay.getDisplayedMessage(activeTab.id)).id;
   }
 }
-

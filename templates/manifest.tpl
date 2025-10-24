@@ -33,7 +33,7 @@
   },
   "permissions": ["accountsRead", "menus", "messagesMove", "messagesRead", "storage", "tabs", "<all_urls>"],
   "experiment_apis": {
-    "reportSpam": {
+    "mailReport": {
       "schema": "schema.json",
       "parent": {
         "scopes": [
@@ -41,10 +41,10 @@
         ],
         "paths": [
           [
-            "reportSpam"
+            "mailReport"
           ]
         ],
-        "script": "implementation.js"
+        "script": "legacy.js"
       }
     }
   }

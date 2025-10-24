@@ -15,7 +15,7 @@
  *
  */
 
-var i18n = {
+const i18n = {
   updateString(string) {
     let re = new RegExp(this.keyPrefix + "(.+?)__", "g");
     return string.replace(re, (matched) => {

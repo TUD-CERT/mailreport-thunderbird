@@ -28,7 +28,7 @@
 
       <div id="show_advanced" class="hide">
         <input type="checkbox" name="advanced">
-        <label for="advanced">__MSG_optionsShowAdvanced__</label>
+        <label>__MSG_optionsShowAdvanced__</label>
       </div>
 
       <div class="advanced hide">
@@ -72,7 +72,7 @@
         <label class="smtp"><strong>SMTP:</strong> __MSG_optionsSMTPRecipientLabel__</label>
         <input class="large smtp" type="email" id="smtp_to" placeholder="reports@example.com" required />
         <input class="smtp" type="checkbox" id="smtp_use_expressive_subject">
-        <label class="smtp" for="advanced">__MSG_optionsSMTPExpressiveSubject__</label>
+        <label class="smtp">__MSG_optionsSMTPExpressiveSubject__</label>
       </div>
   
       <button type="button" class="advanced hide" id="reset">__MSG_optionsReset__</button>
@@ -80,6 +80,7 @@
     </form>
 
     <script src="/vendor/i18n.js"></script>
+    <script type="module" src="/models.js"></script>
     <script type="module" src="/settings.js"></script>
     <script type="module" src="/options/options.js"></script>
   </body>

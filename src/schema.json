@@ -1,6 +1,6 @@
 [
   {
-    "namespace": "reportSpam",
+    "namespace": "mailReport",
     "functions": [
       {
         "name": "sendSMTPReport",
@@ -9,19 +9,14 @@
         "async": true,
         "parameters": [
           {
-            "name": "identity",
-            "type": "any",
-            "description": "Sender MailIdentity"
+            "name": "accountID",
+            "type": "string",
+            "description": "MailAccountId of the MailAccount that sends the report"
           },
           {
             "name": "destination",
             "type": "string",
             "description": "Report destination E-Mail address"
-          },
-          {
-            "name": "source",
-            "type": "string",
-            "description": "Sender E-Mail address"
           },
           {
             "name": "subject",
@@ -39,19 +34,20 @@
             "type": "object",
             "description": "The reported E-Mail",
             "properties": {
-              "date": {"type": "string"},
+              "id": {"type":  "integer"},
               "from": {"type": "string"},
-              "subject": {"type": "string"},
               "to": {"type": "string"},
-              "isHTML": {"type": "boolean"},
-              "preview": {"type": "string"}
+              "reporter": {"type":  "string"},
+              "date": {"type": "string"},
+              "subject": {"type": "string"},
+              "headers": {
+                "type":  "object",
+                "additionalProperties": true
+              },
+              "preview": {"type": "string"},
+              "previewType": {"type": "string"},
+              "raw": {"type":  "string"}
             }
-          },
-          {
-            "name": "attachments",
-            "type": "array",
-            "items": {"type": "string"},
-            "description": "List of attachments (binary strings)"
           },
           {
             "name": "additionalHeaders",
@@ -65,7 +61,8 @@
           {
             "name": "comment",
             "type": "string",
-            "description": "Optional comment"
+            "description": "Optional comment",
+            "optional": true
           }
         ]
       }

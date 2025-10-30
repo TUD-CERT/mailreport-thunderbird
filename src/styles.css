@@ -1,6 +1,7 @@
 .hide {display: none !important}
 .success {color: forestgreen; font-weight: bold; margin: 1em}
 .error {color: crimson; font-weight: bold; margin: 1em}
+body.report {min-width: 30rem}  /* same popup size for all views given a regular font size */
 body.options {min-height: 10rem}  /* vertical space for select dropdowns */
 form {border: none}
 form input {margin-bottom: .5em}

@@ -14,7 +14,7 @@
   "optionsUpdateCheckStartup": {"message": "beim Programmstart"},
   "optionsUpdateCheckNever": {"message": "niemals"},
   "optionsUpdateCheckNow": {"message": "Jetzt prüfen"},
-  "optionsUpdateURL": {"message": "Update-URL:"},
+  "optionsUpdateURL": {"message": "Update-URL"},
   "optionsPhishingTransportLabel": {"message": "Phishing-Meldungen erfolgen via"},
   "optionsSimulationTransportLabel": {"message": "Simulation melden via"},
   "optionsLucyServerLabel": {"message": "Lucy-Server"},

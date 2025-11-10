@@ -3,13 +3,14 @@
 <html>
   <head>
     <meta charset="utf-8"/>
-    <link rel="stylesheet" href="/styles.css" type="text/css"></style>
+    <link rel="stylesheet" href="chrome://global/skin/in-content/common.css" type="text/css">
+    <link rel="stylesheet" href="/styles.css" type="text/css">
   </head>
 
   <body class="options">
     <form>
       <div>
-        <label>__MSG_optionsActionLabel__&nbsp;</label>
+        <label for="report_action">__MSG_optionsActionLabel__&nbsp;</label>
         <select id="report_action">
           <option value="junk">__MSG_optionsActionJunk__</option>
           <option value="trash">__MSG_optionsActionTrash__</option>
@@ -18,7 +19,7 @@
       </div>
 
       <div class="update hide">
-        <label>__MSG_optionsUpdateLabel__&nbsp;</label>
+        <label for="update_check">__MSG_optionsUpdateLabel__&nbsp;</label>
         <select id="update_check">
           <option value="startup">__MSG_optionsUpdateCheckStartup__</option>
           <option value="never">__MSG_optionsUpdateCheckNever__</option>
@@ -32,12 +33,12 @@
       </div>
 
       <div class="advanced hide">
-        <label class="update">__MSG_optionsUpdateURL__&nbsp;</label>
-        <input type="url" class="update" id="update_url" pattern="http(s?)://.*" />
+        <label for="update_url" class="update"><strong>__MSG_optionsUpdateURL__</strong></label>
+        <input class="update large" type="url" id="update_url" pattern="http(s?)://.*" />
       </div>
 
       <div class="advanced hide">
-        <label>__MSG_optionsPhishingTransportLabel__&nbsp;</label>
+        <label for="phishing_transport">__MSG_optionsPhishingTransportLabel__&nbsp;</label>
         <select id="phishing_transport">
           <option value="http">HTTP(S)</option>
           <option value="smtp">SMTP</option>
@@ -46,7 +47,7 @@
       </div>
 
       <div class="advanced hide">
-        <label>__MSG_optionsSimulationTransportLabel__&nbsp;</label>
+        <label for="simulation_transport">__MSG_optionsSimulationTransportLabel__&nbsp;</label>
         <select id="simulation_transport">
           <option value="http">HTTP(S)</option>
           <option value="smtp">SMTP</option>
@@ -55,12 +56,12 @@
       </div>
 
       <div class="advanced hide">
-        <label><strong>Lucy Client-ID</strong></label>
+        <label for="lucy_client_id"><strong>Lucy Client-ID</strong></label>
         <input class="large" type="number" id="lucy_client_id" min="1" max="99" placeholder="optional" />
       </div>
     
       <div class="advanced hide">
-        <label class="http"><strong>HTTP(S):</strong> __MSG_optionsLucyServerLabel__</label>
+        <label for="lucy_server" class="http"><strong>HTTP(S):</strong> __MSG_optionsLucyServerLabel__</label>
         <div class="http">
           <code>https://</code>
           <input type="text" id="lucy_server" placeholder="example.com" required />
@@ -69,10 +70,10 @@
       </div>
 
       <div class="advanced hide">
-        <label class="smtp"><strong>SMTP:</strong> __MSG_optionsSMTPRecipientLabel__</label>
+        <label for="smtp_to" class="smtp"><strong>SMTP:</strong> __MSG_optionsSMTPRecipientLabel__</label>
         <input class="large smtp" type="email" id="smtp_to" placeholder="reports@example.com" required />
         <input class="smtp" type="checkbox" id="smtp_use_expressive_subject">
-        <label class="smtp">__MSG_optionsSMTPExpressiveSubject__</label>
+        <label for="smtp_use_expressive_subject" class="smtp">__MSG_optionsSMTPExpressiveSubject__</label>
       </div>
   
       <button type="button" class="advanced hide" id="reset">__MSG_optionsReset__</button>

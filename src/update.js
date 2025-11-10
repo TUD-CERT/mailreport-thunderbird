@@ -63,7 +63,7 @@ async function showNotificationView(initialState, url=null, version=null) {
   notificationWindow = await browser.windows.create({
     url: `/update/update_notification.html?state=${encodeURIComponent(initialState)}&url=${encodeURIComponent(url)}&version=${encodeURIComponent(version)}`,
     type: "popup",
-    titlePreface: `${browser.runtime.getManifest().name}: ${browser.i18n.getMessage("updateNotificationTitlePreface")}`,
+    titlePreface: `${browser.runtime.getManifest().name}: ${browser.i18n.getMessage("updateNotificationTitlePreface")} - `,
     height: 200,
     width: 800
   });

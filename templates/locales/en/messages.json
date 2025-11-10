@@ -14,7 +14,7 @@
   "optionsUpdateCheckStartup": {"message": "on startup"},
   "optionsUpdateCheckNever": {"message": "never"},
   "optionsUpdateCheckNow": {"message": "Check now"},
-  "optionsUpdateURL": {"message": "Update URL:"},
+  "optionsUpdateURL": {"message": "Update URL"},
   "optionsPhishingTransportLabel": {"message": "Send phishing reports via"},
   "optionsSimulationTransportLabel": {"message": "Send simulation reports via"},
   "optionsLucyServerLabel": {"message": "Lucy Server"},

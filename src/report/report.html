@@ -3,7 +3,8 @@
 <html>
   <head>
     <meta charset="utf-8"/>
-    <link rel="stylesheet" href="/styles.css" type="text/css"></style>
+    <link rel="stylesheet" href="chrome://global/skin/in-content/common.css" type="text/css">
+    <link rel="stylesheet" href="/styles.css" type="text/css">
   </head>
   <body class="report">
     <form class="query" autocomplete="off">
@@ -12,20 +13,20 @@
       <button type="submit">__MSG_reportSubmit__</button>
     </form>
     <div class="report pending hide">
-      <div id="spinner"></div>
-      <span>__MSG_reportWait__</span>
+      <h3 id="spinner"></h3>
+      <h3>__MSG_reportWait__</h3>
     </div>
     <div class="report success hide">
-      <span>&#10004;</span>
-      <span>__MSG_reportSuccess__</span>
+      <h3>&#10004;</h3>
+      <h3>__MSG_reportSuccess__</h3>
     </div>
     <div class="report error hide">
-      <span>&#10006;</span>
-      <span>__MSG_reportError__</span>
+      <h3>&#10006;</h3>
+      <h3>__MSG_reportError__</h3>
     </div>
-    <div class="forbidden hide">
-      <span>&#10006;</span>
-      <span>__MSG_reportForbidden__</span>
+    <div class="report forbidden hide">
+      <h3>&#10006;</h3>
+      <h3>__MSG_reportForbidden__</h3>
     </div>
 
     <script src="/vendor/i18n.js"></script>

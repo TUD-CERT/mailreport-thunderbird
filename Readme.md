@@ -7,6 +7,7 @@ Mozilla Thunderbird plugin for reporting phishing or otherwise malicious E-Mails
 * User-provided optional comment for each report
 * Configurable after-report action: move to junk/move to bin/keep mail
 * Localization in English and German
+* Respects selected UI theme
 * Automatic update notifications
 * Quickly adjustable organization-specific deployment settings
 * Basic telemetry to report current plugin and MUA versions with each request
@@ -137,7 +138,7 @@ This plugin has a built-in mechanism to detect whether an updated version is ava
 
 The received update JSON document should have the following structure:
 ```
-{"version": "1.3", "url": "https://example.com/about-our-thunderbird-plugin"}
+{"version": "1.3", "url": "https://example.com/about-our-thunderbird-report-plugin"}
 ```
 
 **Notice**: This is just a notification mechanism to inform users about an updated version in case this plugin isn't distributed via the official Mozilla Add-On repository. Users still have to download and install the new plugin manually - the URL returned from the update server is just meant to instruct them on how to perform the update.

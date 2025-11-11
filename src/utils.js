@@ -16,7 +16,7 @@ export async function getIdentity(messageHeader) {
   let identity = null;
   // If an identity matches a recpient, use it. Otherwise, rely on the default identity of that folder.
   for(let idt of account.identities) {
-    for(let recp of messageHeader.recipients) {
+    for(let recp of messageHeader.recipients.concat(messageHeader.ccList, messageHeader.bccList)) {
       // Account for "displayname <user@domain.tld>"-style recipients
       if(recp.includes(idt.email)) {
         identity = idt;

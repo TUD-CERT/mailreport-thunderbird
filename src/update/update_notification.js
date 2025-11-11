@@ -1,3 +1,5 @@
+import { localizeDocument } from "../vendor/i18n.mjs";
+
 let bgPort = browser.runtime.connect({name: "update"});
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -32,4 +34,4 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 });
 
-i18n.updateDocument();
+localizeDocument();

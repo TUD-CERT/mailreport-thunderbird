@@ -122,7 +122,7 @@ def make_dev(config: str) -> None:
   make_build(config)
   subprocess.run(["watchmedo",
                   "shell-command",
-                  "--patterns", "**/*.css;**/*.html;**/*.js;**/*.json",
+                  "--patterns", "**/*.css;**/*.html;**/*.js;**/*.mjs;**/*.json",
                   "--recursive",
                   "--command", "SRC=${watch_src_path}; cp -v ${SRC} ./build/${SRC#./src/}",
                   "./src"])

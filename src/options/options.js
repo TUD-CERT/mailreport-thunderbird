@@ -1,3 +1,4 @@
+import { localizeDocument } from "../vendor/i18n.mjs";
 import { Settings, Transport, UpdateCheck } from "../models.js";
 import { getSettings, setSettings, getDefaults, isEqualToStoredSettings } from "../settings.js";
 
@@ -207,4 +208,4 @@ document.addEventListener("DOMContentLoaded", async () => {
   form.updateUpdateNowButtonVisibility()
 });
 
-i18n.updateDocument();
+localizeDocument();

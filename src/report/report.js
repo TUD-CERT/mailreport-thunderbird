@@ -1,3 +1,4 @@
+import { localizeDocument } from "../vendor/i18n.mjs";
 import { ReportAction } from "../models.js";
 import { isMessageReportPermitted } from "../reporting.js";
 import { getSettings } from "../settings.js";
@@ -44,4 +45,4 @@ document.querySelector("form").addEventListener("submit", async (e) => {
   });
 });
 
-i18n.updateDocument();
+localizeDocument();

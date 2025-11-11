@@ -29,6 +29,7 @@
   "reportSuccess": {"message": "Thanks for your report!"},
   "reportError": {"message": "Reporting failed, please try again later."},
   "reportForbidden": {"message": "This account is not permitted to report e-mails."},
+  "reportUnreportable": {"message": "This type of e-mail can't be reported."},
   "simulationAckTitlePreface": {"message": "E-Mail Report"},
   "simulationAckSuccessHeader": {"message": "Well done!"},
   "simulationAckSuccessBody": {"message": "You reported a suspicious E-Mail that is part of our phishing training campaign. Thank you!"},

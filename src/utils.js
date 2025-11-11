@@ -8,13 +8,15 @@ export async function getAccountOfIdentity(identityID) {
 }
 
 /**
- * Returns the MailIdentity the given MessageHeader was received with (based on the message"s folder and headers).
+ * Returns the MailIdentity the given MessageHeader was received with (based on the message's folder and headers).
+ * External messages (opened from a file or attachment) have no MailIdentity by definition and return null.
  */
 export async function getIdentity(messageHeader) {
+  if(messageHeader.external) return null;
   const accountId = messageHeader.folder.accountId,
         account = await browser.accounts.get(accountId);
   let identity = null;
-  // If an identity matches a recpient, use it. Otherwise, rely on the default identity of that folder.
+  // If an identity matches a recipient, use it. Otherwise, rely on the account's default identity.
   for(let idt of account.identities) {
     for(let recp of messageHeader.recipients.concat(messageHeader.ccList, messageHeader.bccList)) {
       // Account for "displayname <user@domain.tld>"-style recipients

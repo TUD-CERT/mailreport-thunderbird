@@ -1,6 +1,6 @@
 import { localizeDocument } from "../vendor/i18n.mjs";
-import { ReportAction } from "../models.js";
-import { isMessageReportPermitted } from "../reporting.js";
+import { ReportabilityIssue, ReportAction } from "../models.js";
+import { checkMessageReportability } from "../reporting.js";
 import { getSettings } from "../settings.js";
 import { getCurrentMessageID } from "../utils.js";
 
@@ -23,8 +23,14 @@ bgPort.onMessage.addListener((m) => {
 document.addEventListener("DOMContentLoaded", async () => {
   // Disable reporting functionality in case no permitted account is registered
   const settings = await getSettings();
-  const permittedDomains = settings.permitted_domains;
-  if(!(await isMessageReportPermitted(await getCurrentMessageID(), permittedDomains))) showView(".forbidden");
+  switch(await checkMessageReportability(await getCurrentMessageID(), settings.permitted_domains)) {
+    case ReportabilityIssue.FORBIDDEN:
+      showView(".forbidden");
+      break;
+    case ReportabilityIssue.TYPE:
+      showView(".unreportable");
+      break;
+  }
   // Displays the reporting action depending on current settings
   const $reportAction = document.querySelector("span.reportAction");
   switch(settings.report_action) {

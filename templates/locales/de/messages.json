@@ -29,6 +29,7 @@
   "reportSuccess": {"message": "Vielen Dank für Ihre Meldung"},
   "reportError": {"message": "Meldung konnte nicht versendet werden, bitte versuchen Sie es später erneut."},
   "reportForbidden": {"message": "Dieses E-Mail-Konto ist nicht zum Melden von E-Mails berechtigt."},
+  "reportUnreportable": {"message": "Diese Art von E-Mail kann nicht gemeldet werden."},
   "simulationAckTitlePreface": {"message": "Meldung"},
   "simulationAckSuccessHeader": {"message": "Gut gemacht!"},
   "simulationAckSuccessBody": {"message": "Sie haben eine verdächtige E-Mail aus unserer Phishing-Simulation korrekt erkannt. Vielen Dank für die Meldung!"},

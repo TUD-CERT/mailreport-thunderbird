@@ -1,5 +1,5 @@
 import { ReportResultStatus, UpdateCheck } from "./models.js";
-import {getAdditionalHeaders, isMessageReportPermitted, reportFraud, reportSpam} from "./reporting.js";
+import {getAdditionalHeaders, checkMessageReportability, reportFraud, reportSpam} from "./reporting.js";
 import { getSettings } from "./settings.js";
 import { checkForUpdate } from "./update.js";
 import { getCurrentMessageID } from "./utils.js";
@@ -10,7 +10,8 @@ const REPORTING_STATE = {
   PENDING: ".pending",
   SUCCESS: ".success",
   ERROR: ".error",
-  FORBIDDEN: ".forbidden"
+  FORBIDDEN: ".forbidden",
+  UNREPORTABLE: ".unreportable"
 }
 let reportViewPort = null,
     reportViewConnectedPromise = null,
@@ -80,11 +81,8 @@ async function handleFraudReport(messageID, comment) {
 
 async function handleSpamReport(messageID) {
   const settings = await getSettings();
-  const permittedDomains = settings.permitted_domains;
-  if(!(await isMessageReportPermitted(await getCurrentMessageID(), permittedDomains))) {
-    updateReportView(REPORTING_STATE.FORBIDDEN);
-    return;
-  }
+  // The report view checks reportability itself, but we need to duplicate the check here to act on its result
+  if(await checkMessageReportability(await getCurrentMessageID(), settings.permitted_domains)) return;
   updateReportView(REPORTING_STATE.PENDING);
   const reportResult = await reportSpam(messageID);
   switch(reportResult.status) {

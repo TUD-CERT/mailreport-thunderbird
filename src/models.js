@@ -10,6 +10,12 @@ export const ReportAction = {
   KEEP: "keep"
 }
 
+export const ReportabilityIssue = {
+  NONE: null,
+  FORBIDDEN: "FORBIDDEN",  // Message can't be reported due to permission issues
+  TYPE: "TYPE"             // Message can't be reported due to its type (e.g. "external" messages)
+}
+
 export const ReportResultStatus = {
   SUCCESS: "SUCCESS",
   SIMULATION: "SIMULATION",

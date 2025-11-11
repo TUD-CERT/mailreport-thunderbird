@@ -1,4 +1,4 @@
-import { BodyType, Message, ReportAction, ReportResult, ReportResultStatus, Transport } from "./models.js";
+import { BodyType, Message, ReportabilityIssue, ReportAction, ReportResult, ReportResultStatus, Transport } from "./models.js";
 import { getSettings } from "./settings.js";
 import { getAccountOfIdentity, getIdentity } from "./utils.js";
 
@@ -300,22 +300,23 @@ export async function reportSpam(messageID) {
 
 /**
  * Checks whether a report for the given message ID is permitted by retrieving the associated account's
- * identities and validating it against the given list of permitted domains.
+ * identities and validating it against the given list of permitted domains. In addition, messages without
+ * an associated identity (such as "external" messages) are not reportable.
  */
-export async function isMessageReportPermitted(messageID, permittedDomains) {
+export async function checkMessageReportability(messageID, permittedDomains) {
   const message = await browser.messages.get(messageID),
         identity = await getIdentity(message);
-  // Pseudo accounts such as "Local Folders" don"t have associated identities
-  if(identity === null) return false;
-  // If no domains were given, reporting is always permitted
-  if(permittedDomains.length === 0) return true;
+  // Pseudo accounts such as "Local Folders" and "external" messages don't have associated identities
+  if(identity === null) return ReportabilityIssue.TYPE;
+  // If no permitted domains are configured, reporting is always permitted
+  if(permittedDomains.length === 0) return ReportabilityIssue.NONE;
   // Attempt to find a permitted identity to report the message
   const account = await browser.accounts.get(identity.accountId);
   for(let domain of permittedDomains) {
     let domainRegex = new RegExp(domain);
     for(let identity of account.identities) {
-      if(domainRegex.test(identity.email.split("@")[1])) return true;
+      if(domainRegex.test(identity.email.split("@")[1])) return ReportabilityIssue.NONE;
     }
   }
-  return false;
+  return ReportabilityIssue.FORBIDDEN;
 }

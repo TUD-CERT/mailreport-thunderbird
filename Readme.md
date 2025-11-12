@@ -1,5 +1,5 @@
 # E-Mail Reporting Plugin for Mozilla Thunderbird
-Mozilla Thunderbird plugin for reporting phishing or otherwise malicious E-Mails to an IT security department, developed by [TUD-CERT](https://tud.de/cert) in cooperation with the [Designated Office: Information Security](https://www.tu-braunschweig.de/en/ciso) of TU Braunschweig. This plugin is meant to be customized and deployed within well-defined organizational boundaries, such as for all employees covered by a CERT or members of a university.
+Mozilla Thunderbird plugin for reporting phishing or otherwise malicious E-Mails to an IT security department, originally developed by [TUD-CERT](https://tud.de/cert) in cooperation with the [Designated Office: Information Security](https://www.tu-braunschweig.de/en/ciso) of TU Braunschweig. This plugin is meant to be customized and deployed within well-defined organizational boundaries, such as for all employees covered by a CERT or members of a university.
 
 ## Features
 ![Plugin screenshot](docs/plugin.png?raw=true "The plugin in action")
@@ -15,9 +15,16 @@ Mozilla Thunderbird plugin for reporting phishing or otherwise malicious E-Mails
 * [Lucy](https://lucysecurity.com) phishing campaign detection
 
 ## Requirements
-The plugin has been tested with Thunderbird 91 and 140 on Linux and Windows.
+The plugin is compatible with Thunderbird 106 up to 140 on Linux, Windows and macOS.
 
 The project build script `make.py` requires at least Python 3.8.
+
+## Technical Overview
+This plugin adds an e-mail report button to either the main Thunderbird toolbar (near the top of the window) or to each individual message window, right next to the *"Reply"* and *"Forward"* buttons. When clicked, the currently selected e-mail can be reported either as being malicious or spam. Please note that spam reporting is strictly optional and can be disabled when building the plugin. Reporting a malicious e-mail opens a popup that enables users to attach an (optional) comment to their report. In contrast, reporting e-mails as spam happens immediately and can't be commented. In both cases, a popup informs users of the current status: Whether the report is still in progress, was successful or ended up in an error.
+
+Reports can be sent either via e-mail/SMTP to a configurable reporting address or to a server that provides a [Lucy](https://lucysecurity.com)-compatible API (or both). The subjects of reports sent via SMTP use either `Phishing Report` or `Spam Report` as prefix to differentiate between the reporting options. Attached comments and basic telemetry (if enabled) are prepended to the e-mail body, while a raw sample of the reported e-mail is added as an attachment. The Lucy API doesn't support spam reports.
+
+If a Lucy-style phishing campaign is detected - which is based on certain header fields present in the reported e-mail - the Lucy server is notified of the report via HTTP(S) and a dialogue is shown to congratulate the reporter.
 
 ## How to build
 Each organization using this reporting plugin has a specific set of requirements, such as the organization's spam reporting e-mail address, custom strings and messages shown within the plugins interface or custom icons. We call these organization-specific settings *deployment configurations* and place them inside the `configs/` directory. In there, each subfolder holds all modifications to the default configuration (which can be found in `templates/`) for a specific organization. 
@@ -26,21 +33,31 @@ This project uses a custom build script called `make.py` to assemble the plugin 
 
 ``` 
 $ ./make.py build tu-dresden.de
-Writing defaults.json
-Writing manifest.json
-Writing _locales/de/messages.json
-Writing _locales/en/messages.json
-Creating images/
+Build path: build
+Writing build/defaults.json
+Writing build/manifest.json
+...
 ```
 
-This command builds the project by parsing the default configuration in `templates/` and the deployment configuration in `configs/tu-dresden.de/` to produce the plugin artifacts such as `defaults.json`, `manifest.json`, `_locales/` and `images/`. The plugin can then be loaded for testing purposes from within Thunderbird as a *temporary add-on*.
+This command builds the project for testing by parsing the default configuration in `templates/` and the deployment configuration in `configs/tu-dresden.de/` to produce plugin artifacts such as `defaults.json`, `manifest.json`, `_locales/` and `images/`. The finished build result is written to `build/`. The plugin can then be loaded for testing purposes by loading the generated `build/manifest.json` from within Thunderbird as a *Temporary Add-on*, which is accessible from the *Debug Add-ons* screen.
 
-To also generate an xpi file that can be installed as a regular plugin from within Thunderbird, supply the `-d` option:
+For easier development, `make.py` also has a `dev` target that builds the project once in `build/` (similar to `make.py build`), but also automatically picks up changes made to the sources during runtime. However, that feature requires the [watchdog](https://pypi.org/project/watchdog/) module for Python 3, which may be installed either globally or in a Python virtual environment:
+
+```
+$ python3 -m venv venv
+$ source venv/bin/activate
+(venv) $ pip3 install watchdog
+...
+Successfully installed watchdog-x.y.z
+(venv) $ ./make.py dev tu-dresden.de
+```
+
+To build the plugin for production, which results in an `xpi` file that can be installed as a regular plugin from within Thunderbird, add the `-d` option to `build`:
 
 ``` 
 $ ./make.py build -d example.com
 ...
-Plugin archive written to dist/mailreport@example.com.xpi
+Plugin archive written to dist/mailreport@example.com-1.0.xpi
 ```
 
 To revert to a clean state and remove all artifacts generated during builds, invoke `./make.py clean`.

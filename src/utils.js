@@ -52,3 +52,16 @@ export async function getCurrentMessageID() {
     return (await browser.messageDisplay.getDisplayedMessage(activeTab.id)).id;
   }
 }
+
+/**
+ * Replacement/Polyfill for Promise.withResolvers(), which doesn't exist in older
+ * TB versions we still want to support.
+ */
+export function promiseWithResolvers() {
+  let resolve, reject;
+  const promise = new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return {resolve, reject, promise};
+}

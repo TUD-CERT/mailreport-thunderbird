@@ -2,7 +2,7 @@ import { ReportResultStatus, UpdateCheck } from "./models.js";
 import {getAdditionalHeaders, checkMessageReportability, reportFraud, reportSpam} from "./reporting.js";
 import { getSettings } from "./settings.js";
 import { checkForUpdate } from "./update.js";
-import { getCurrentMessageID } from "./utils.js";
+import { getCurrentMessageID, promiseWithResolvers } from "./utils.js";
 
 // State changes are sent to the reporting dialog view
 const REPORTING_STATE = {
@@ -22,7 +22,7 @@ let reportViewPort = null,
  * Async wrapper for menus.create.
  */
 async function addMenuEntry(createData) {
-  const { promise, resolve, reject } = Promise.withResolvers();
+  const { promise, resolve, reject } = promiseWithResolvers();
   let error;
   const id = browser.menus.create(createData, () => {
     error = browser.runtime.lastError; // Either null or an Error object.
@@ -104,7 +104,7 @@ async function handleSpamReport(messageID) {
  * Stalls the caller until the connection to an opened report view has been successfully established.
  */
 async function reportViewConnected() {
-  if(reportViewConnectedPromise === null) reportViewConnectedPromise = Promise.withResolvers();
+  if(reportViewConnectedPromise === null) reportViewConnectedPromise = promiseWithResolvers();
   await reportViewConnectedPromise.promise;
 }
 

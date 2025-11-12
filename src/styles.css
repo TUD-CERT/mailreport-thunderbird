@@ -5,10 +5,11 @@
 html {background: var(--background-color-box) !important}
 body.report {
     margin: .5rem 1rem .5rem .5rem;
-    min-width: 30rem /* same popup size for all views given a regular font size */
+    min-width: 30rem; /* Same popup size for all views given a regular font size */
 }
+body.report p {margin-left: 4px} /* Left-align paragraph with TB-styled form inputs */
 body.options {
-    min-height: 10rem; /* vertical space for select dropdowns */
+    min-height: 10rem; /* Vertical space for select dropdowns */
     margin-right: 1rem
 }
 body.options input, body.options button {

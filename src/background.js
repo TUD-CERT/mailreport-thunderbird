@@ -2,7 +2,7 @@ import { ReportResultStatus, UpdateCheck } from "./models.js";
 import {getAdditionalHeaders, checkMessageReportability, reportFraud, reportSpam} from "./reporting.js";
 import { getSettings } from "./settings.js";
 import { checkForUpdate } from "./update.js";
-import { getCurrentMessageID, promiseWithResolvers } from "./utils.js";
+import { addMenuEntry, getCurrentMessageID, promiseWithResolvers } from "./utils.js";
 
 // State changes are sent to the reporting dialog view
 const REPORTING_STATE = {
@@ -17,29 +17,6 @@ let reportViewPort = null,
     reportViewConnectedPromise = null,
     simAckWindow = null;
 
-
-/**
- * Async wrapper for menus.create.
- */
-async function addMenuEntry(createData) {
-  const { promise, resolve, reject } = promiseWithResolvers();
-  let error;
-  const id = browser.menus.create(createData, () => {
-    error = browser.runtime.lastError; // Either null or an Error object.
-    if (error) {
-      reject(error)
-    } else {
-      resolve();
-    }
-  });
-  try {
-    await promise;
-    console.info(`Successfully created menu entry <${id}>`);
-  } catch (error) {
-      console.error("Failed to create menu entry:", createData, error);
-  }
-  return id;
-}
 
 /**
  * Shows a specific view/state within the reporting view (in case the reporting view is currently active).
@@ -177,11 +154,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     await addMenuEntry({
       id: "report-fraud",
       contexts: ["browser_action_menu", "message_display_action_menu"],
+      icons: {
+        "16": "images/fraud_16.png",
+        "32": "images/fraud_32.png",
+        "64": "images/fraud_64.png"
+      },
       title: "Report as phishing/fraud..."
     })
     await addMenuEntry({
       id: "report-spam",
       contexts: ["browser_action_menu", "message_display_action_menu"],
+      icons: {
+        "16": "images/spam_16.png",
+        "32": "images/spam_32.png",
+        "64": "images/spam_64.png"
+      },
       title: "Report as spam"
     })
     const actionAPI = settings.use_toolbar_button ? "browserAction" : "messageDisplayAction";

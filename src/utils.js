@@ -65,3 +65,26 @@ export function promiseWithResolvers() {
   });
   return {resolve, reject, promise};
 }
+
+/**
+ * Async wrapper for menus.create.
+ */
+export async function addMenuEntry(createData) {
+  const { promise, resolve, reject } = promiseWithResolvers();
+  let error;
+  const id = browser.menus.create(createData, () => {
+    error = browser.runtime.lastError; // Either null or an Error object.
+    if (error) {
+      reject(error)
+    } else {
+      resolve();
+    }
+  });
+  try {
+    await promise;
+    console.info(`Successfully created menu entry <${id}>`);
+  } catch (error) {
+    console.error("Failed to create menu entry:", createData, error);
+  }
+  return id;
+}

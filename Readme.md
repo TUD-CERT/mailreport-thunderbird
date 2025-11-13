@@ -15,7 +15,7 @@ Mozilla Thunderbird plugin for reporting phishing or otherwise malicious E-Mails
 * [Lucy](https://lucysecurity.com) phishing campaign detection
 
 ## Requirements
-The plugin is compatible with Thunderbird 106 up to 140 on Linux, Windows and macOS.
+The plugin is compatible with Thunderbird 115 up to 140 on Linux, Windows and macOS.
 
 The project build script `make.py` requires at least Python 3.8.
 
@@ -24,7 +24,7 @@ This plugin adds an e-mail report button to either the main Thunderbird toolbar 
 
 Reports can be sent either via e-mail/SMTP to a configurable reporting address or to a server that provides a [Lucy](https://lucysecurity.com)-compatible API (or both). The subjects of reports sent via SMTP use either `Phishing Report` or `Spam Report` as prefix to differentiate between the reporting options. Attached comments and basic telemetry (if enabled) are prepended to the e-mail body, while a raw sample of the reported e-mail is added as an attachment. The Lucy API doesn't support spam reports.
 
-If a Lucy-style phishing campaign is detected - which is based on certain header fields present in the reported e-mail - the Lucy server is notified of the report via HTTP(S) and a dialogue is shown to congratulate the reporter.
+If a Lucy-style phishing campaign is detected - which is based on certain header fields present in the reported e-mail - the Lucy server is notified of the report via HTTP(S) and a dialog is shown to congratulate the reporter.
 
 ## How to build
 Each organization using this reporting plugin has a specific set of requirements, such as the organization's spam reporting e-mail address, custom strings and messages shown within the plugins interface or custom icons. We call these organization-specific settings *deployment configurations* and place them inside the `configs/` directory. In there, each subfolder holds all modifications to the default configuration (which can be found in `templates/`) for a specific organization. 

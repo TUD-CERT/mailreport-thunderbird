@@ -136,7 +136,7 @@ Organizations can also overwrite individual localization strings from `templates
 }
 ```
 
-Finally, deployment configurations can provide custom plugin icons. By default, `templates/manifest.tpl` defines the plugin's icons as follows:
+Finally, deployment configurations can provide custom plugin icons. The manifest in `templates/manifest.tpl` defines the plugin's app icon as follows:
 
 ```
 "icons": {
@@ -146,7 +146,23 @@ Finally, deployment configurations can provide custom plugin icons. By default, 
 }
 ```
 
-The icon used for the "report button" itself is specified as `"default_icon" : "images/app_16.png"`. To use custom icons, create a subfolder `images/` within your deployment configuration and put icons in there as `app_64.png`, `app_32.png` and `app_16.png`.
+The icon used for the "report button" itself is specified as `"default_icon" : "images/app_16.png"`. Furthermore, the menu icons used to differentiate between fraud and spam reports are defined programmatically in `background.js`:
+
+```
+icons: {
+  "16": "images/fraud_16.png",
+  "32": "images/fraud_32.png",
+  "64": "images/fraud_64.png"
+},
+...
+icons: {
+  "16": "images/spam_16.png",
+  "32": "images/spam_32.png",
+  "64": "images/spam_64.png"
+},
+```
+
+To use custom icons, create a subfolder `images/` within your deployment configuration and put those icons you want to override in there, using the same file names, e.g. `app_64.png`, `app_32.png` and `app_16.png`. Icons without an override fall back to their defaults in `templates/images`.
 
 ## Update Notifications
 ![Plugin update notification screenshot](docs/update.png?raw=true "Update notification")

@@ -10,6 +10,20 @@ export const ReportAction = {
   KEEP: "keep"
 }
 
+export const ReportDialogView = {
+  QUERY: ".query",
+  PENDING: ".pending",
+  SUCCESS: ".success",
+  ERROR: ".error",
+  FORBIDDEN: ".forbidden",
+  UNREPORTABLE: ".unreportable"
+}
+
+export const ReportDialogAction = {
+  SHOW_VIEW: "showView",
+  SHOW_MOVE_MSG_FAILED_NOTIFICATION: "showMoveMessageFailedNotification"
+}
+
 export const ReportabilityIssue = {
   NONE: null,
   FORBIDDEN: "FORBIDDEN",  // Message can't be reported due to permission issues
@@ -20,6 +34,12 @@ export const ReportResultStatus = {
   SUCCESS: "SUCCESS",
   SIMULATION: "SIMULATION",
   ERROR: "ERROR"
+}
+
+export const MoveMessageStatus = {
+  NONE: null,                               // No attempt to move the message has been made
+  SUCCESS: "SUCCESS",                       // Message has been moved successfully
+  NONEXISTENT_FOLDER: "NONEXISTENT_FOLDER"  // The target folder doesn't exist
 }
 
 export const Transport = {
@@ -71,10 +91,14 @@ export class Message {
 }
 
 export class ReportResult {
-  status;
+  reportStatus;
+  moveMessageStatus;
+  moveMessageTarget;  // Target folder of the message move operation
   diagnosis;
 
-  constructor(status) {
-    this.status = status;
+  constructor(reportStatus, moveMessageStatus, moveMessageTarget) {
+    this.reportStatus = reportStatus;
+    this.moveMessageStatus = moveMessageStatus;
+    this.moveMessageTarget = moveMessageTarget;
   }
 }

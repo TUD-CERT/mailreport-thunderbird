@@ -1,4 +1,12 @@
-import { BodyType, Message, ReportabilityIssue, ReportAction, ReportResult, ReportResultStatus, Transport } from "./models.js";
+import {
+  BodyType,
+  Message,
+  MoveMessageStatus,
+  ReportabilityIssue,
+  ReportAction,
+  ReportResult,
+  ReportResultStatus,
+  Transport } from "./models.js";
 import { getSettings } from "./settings.js";
 import { getAccountOfIdentity, getIdentity } from "./utils.js";
 
@@ -181,19 +189,19 @@ function getFolderForAccount(account, type) {
  * If folder is REPORT_ACTIONS.KEEP, this is a NOP.
  */
 async function moveMessageTo(message, folder) {
-  if(folder === ReportAction.KEEP) return;
+  if(folder === ReportAction.KEEP) return MoveMessageStatus.SUCCESS;
   // Infer account from message
   const account = await getAccountOfIdentity(message.reporter),
         targetFolder = getFolderForAccount(account, folder);
+  if(targetFolder === null) return MoveMessageStatus.NONEXISTENT_FOLDER;
   console.log(`Moving message ${message.id} to ${folder} folder`);
-  if(targetFolder !== null) {
-    // Starting with TB128, browser.messages.move() expects a MailFolderId instead of a MailFolder
-    try {
-      await browser.messages.move([message.id], targetFolder.id);
-    } catch(err) {
-      await browser.messages.move([message.id], targetFolder);
-    }
+  // Starting with TB128, browser.messages.move() expects a MailFolderId instead of a MailFolder
+  try {
+    await browser.messages.move([message.id], targetFolder.id);
+  } catch(err) {
+    await browser.messages.move([message.id], targetFolder);
   }
+  return MoveMessageStatus.SUCCESS;
 }
 
 /**
@@ -242,11 +250,11 @@ export async function reportFraud(messageID, comment) {
           parsedComment
       );
     }
-    await moveMessageTo(message, settings.report_action);
-    if(isSimulation) return new ReportResult(ReportResultStatus.SIMULATION);
-    return new ReportResult(ReportResultStatus.SUCCESS);
+    const moveMessageStatus = await moveMessageTo(message, settings.report_action);
+    if(isSimulation) return new ReportResult(ReportResultStatus.SIMULATION, moveMessageStatus, settings.report_action);
+    return new ReportResult(ReportResultStatus.SUCCESS, moveMessageStatus, settings.report_action);
   } catch(err) {
-    const result = new ReportResult(ReportResultStatus.ERROR);
+    const result = new ReportResult(ReportResultStatus.ERROR, MoveMessageStatus.NONE, ReportAction.KEEP);
     result.diagnosis = err.toString();
     return result;
   }
@@ -270,11 +278,14 @@ export async function reportSpam(messageID) {
     if(belongsToSimulation(message)) {
       const result = await reportFraud(messageID, "");
       // Users expect reported spam mails to be moved away even if ReportAction is KEEP
-      if (settings.report_action === ReportAction.KEEP) await moveMessageTo(message, ReportAction.JUNK);
+      if (settings.report_action === ReportAction.KEEP) {
+        result.moveMessageStatus = await moveMessageTo(message, ReportAction.JUNK);
+        result.moveMessageTarget = ReportAction.JUNK;
+      }
       return result;
     }
     if(transport === Transport.HTTP) {
-      const result = new ReportResult(ReportResultStatus.ERROR);
+      const result = new ReportResult(ReportResultStatus.ERROR, MoveMessageStatus.NONE, ReportAction.KEEP);
       result.diagnosis = "HTTP endpoint does not support spam reports";
       return result;
     }
@@ -289,10 +300,10 @@ export async function reportSpam(messageID) {
         additionalHeaders,
         null
     );
-    await moveMessageTo(message, ReportAction.JUNK);
-    return new ReportResult(ReportResultStatus.SUCCESS);
+    const moveMessageStatus = await moveMessageTo(message, ReportAction.JUNK);
+    return new ReportResult(ReportResultStatus.SUCCESS, moveMessageStatus, ReportAction.JUNK);
   } catch(err) {
-    const result = new ReportResult(ReportResultStatus.ERROR);
+    const result = new ReportResult(ReportResultStatus.ERROR, MoveMessageStatus.NONE, ReportAction.KEEP);
     result.diagnosis = err.toString();
     return result;
   }

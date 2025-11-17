@@ -1,18 +1,9 @@
-import { ReportResultStatus, UpdateCheck } from "./models.js";
+import {MoveMessageStatus, ReportDialogView, ReportResultStatus, UpdateCheck} from "./models.js";
 import {getAdditionalHeaders, checkMessageReportability, reportFraud, reportSpam} from "./reporting.js";
 import { getSettings } from "./settings.js";
 import { checkForUpdate } from "./update.js";
 import { addMenuEntry, getCurrentMessageID, promiseWithResolvers } from "./utils.js";
 
-// State changes are sent to the reporting dialog view
-const REPORTING_STATE = {
-  QUERY: ".query",
-  PENDING: ".pending",
-  SUCCESS: ".success",
-  ERROR: ".error",
-  FORBIDDEN: ".forbidden",
-  UNREPORTABLE: ".unreportable"
-}
 let reportViewPort = null,
     reportViewConnectedPromise = null,
     simAckWindow = null;
@@ -22,7 +13,18 @@ let reportViewPort = null,
  * Shows a specific view/state within the reporting view (in case the reporting view is currently active).
  */
 function updateReportView(state) {
-  if(reportViewPort !== null) reportViewPort.postMessage({view: state});
+  if(reportViewPort === null) return;
+  reportViewPort.postMessage({action: "showView", view: state});
+}
+
+/**
+ * Enables a notification shown within the report view that informs users about
+ * a failed attempt to move the reported message to another folder. The name of
+ * the target folder is given as moveTarget and shown in the dialog.
+ */
+function showReportMoveMessageFailedNotification(moveTarget) {
+  if(reportViewPort === null) return;
+  reportViewPort.postMessage({action: "showMoveMessageFailedNotification", target: moveTarget});
 }
 
 /**
@@ -39,18 +41,20 @@ async function showSimulationAcknowledgement() {
 }
 
 async function handleFraudReport(messageID, comment) {
-  updateReportView(REPORTING_STATE.PENDING);
+  updateReportView(ReportDialogView.PENDING);
   const reportResult = await reportFraud(messageID, comment);
-  switch(reportResult.status) {
+  switch(reportResult.reportStatus) {
     case ReportResultStatus.SUCCESS:
-      updateReportView(REPORTING_STATE.SUCCESS);
+      if(reportResult.moveMessageStatus === MoveMessageStatus.NONEXISTENT_FOLDER)
+        showReportMoveMessageFailedNotification(reportResult.moveMessageTarget);
+      updateReportView(ReportDialogView.SUCCESS);
       break;
     case ReportResultStatus.SIMULATION:
-      updateReportView(REPORTING_STATE.SUCCESS);
+      updateReportView(ReportDialogView.SUCCESS);
       await showSimulationAcknowledgement();
       break;
     case ReportResultStatus.ERROR:
-      updateReportView(REPORTING_STATE.ERROR);
+      updateReportView(ReportDialogView.ERROR);
       console.log(reportResult.diagnosis);
       break;
   }
@@ -60,18 +64,20 @@ async function handleSpamReport(messageID) {
   const settings = await getSettings();
   // The report view checks reportability itself, but we need to duplicate the check here to act on its result
   if(await checkMessageReportability(await getCurrentMessageID(), settings.permitted_domains)) return;
-  updateReportView(REPORTING_STATE.PENDING);
+  updateReportView(ReportDialogView.PENDING);
   const reportResult = await reportSpam(messageID);
-  switch(reportResult.status) {
+  switch(reportResult.reportStatus) {
     case ReportResultStatus.SUCCESS:
-      updateReportView(REPORTING_STATE.SUCCESS);
+      if(reportResult.moveMessageStatus === MoveMessageStatus.NONEXISTENT_FOLDER)
+        showReportMoveMessageFailedNotification(reportResult.moveMessageTarget);
+      updateReportView(ReportDialogView.SUCCESS);
       break;
     case ReportResultStatus.SIMULATION:
-      updateReportView(REPORTING_STATE.SUCCESS);
+      updateReportView(ReportDialogView.SUCCESS);
       await showSimulationAcknowledgement();
       break;
     case ReportResultStatus.ERROR:
-      updateReportView(REPORTING_STATE.ERROR);
+      updateReportView(ReportDialogView.ERROR);
       console.log(reportResult.diagnosis);
       break;
   }

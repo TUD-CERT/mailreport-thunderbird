@@ -7,7 +7,9 @@ body.report {
     margin: .5rem 1rem .5rem .5rem;
     min-width: 30rem; /* Same popup size for all views given a regular font size */
 }
+body.report > div {display: grid; grid-template-columns: max-content max-content; justify-content: center; align-items: center; column-gap: 1em}
 body.report p {margin-left: 4px} /* Left-align paragraph with TB-styled form inputs */
+body.report div.moveMessageFailed strong {color: crimson; font-weight: bold}
 body.options {
     min-height: 10rem; /* Vertical space for select dropdowns */
     margin-right: 1rem
@@ -26,7 +28,6 @@ button {width: 100%; text-align: center}
 button.inline {width: auto}
 body.dialog {display: grid; align-content: center; justify-content: center; width: 100vw; height: 100vh; margin: 0; padding: .5rem 1rem .5rem .5rem}
 body.dialog p {margin-block-start: 0; text-align: center; padding: 0 1em}
-div.report {display: grid; grid-template-columns: max-content max-content; justify-content: center; align-items: center; column-gap: 1em}
 #spinner {border: 0.4rem solid lightgrey; border-top: 0.4rem solid dimgrey; border-radius: 50%; width: 1rem; height: 1rem; animation: spin 2s linear infinite}
 @keyframes spin {
     0% { transform: rotate(0deg); }

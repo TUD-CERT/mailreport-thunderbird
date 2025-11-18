@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         "32": "images/fraud_32.png",
         "64": "images/fraud_64.png"
       },
-      title: "Report as phishing/fraud..."
+      title: browser.i18n.getMessage("menuFraudReportLabel")
     })
     await addMenuEntry({
       id: "report-spam",
@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         "32": "images/spam_32.png",
         "64": "images/spam_64.png"
       },
-      title: "Report as spam"
+      title: browser.i18n.getMessage("menuSpamReportLabel")
     })
     const actionAPI = settings.use_toolbar_button ? "browserAction" : "messageDisplayAction";
     browser.menus.onClicked.addListener(async (info, tab) => {

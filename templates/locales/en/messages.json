@@ -1,5 +1,7 @@
 {
   "extensionDescription": {"message": "Adds a phishing report button to the toolbar."},
+  "menuFraudReportLabel": {"message":  "Report as phishing/fraud..."},
+  "menuSpamReportLabel": {"message":  "Report as spam"},
   "reportButtonLabel": {"message": "Report"},
   "reportButtonHelp": {"message": "Reports suspicious E-Mails. Select the E-Mail and then click this button to forward it to the IT security department."},
   "close": {"message": "Close"},
@@ -15,7 +17,7 @@
   "optionsUpdateCheckNever": {"message": "never"},
   "optionsUpdateCheckNow": {"message": "Check now"},
   "optionsUpdateURL": {"message": "Update URL"},
-  "optionsPhishingTransportLabel": {"message": "Send phishing reports via"},
+  "optionsFraudSpamTransportLabel": {"message": "Send fraud/spam reports via"},
   "optionsSimulationTransportLabel": {"message": "Send simulation reports via"},
   "optionsLucyServerLabel": {"message": "Lucy Server"},
   "optionsSMTPRecipientLabel": {"message": "E-Mail address to send reports to"},

@@ -1,5 +1,7 @@
 {
   "extensionDescription": {"message": "Fügt einen Phishing-Meldebutton zur Toolbar hinzu."},
+  "menuFraudReportLabel": {"message":  "Als Phishing/Betrug melden..."},
+  "menuSpamReportLabel": {"message":  "Als Spam melden"},
   "reportButtonLabel": {"message": "Melden"},
   "reportButtonHelp": {"message": "Meldet die markierte E-Mail an Ihr IT-Sicherheitsteam"},
   "close": {"message": "Schließen"},
@@ -15,8 +17,8 @@
   "optionsUpdateCheckNever": {"message": "niemals"},
   "optionsUpdateCheckNow": {"message": "Jetzt prüfen"},
   "optionsUpdateURL": {"message": "Update-URL"},
-  "optionsPhishingTransportLabel": {"message": "Phishing-Meldungen erfolgen via"},
-  "optionsSimulationTransportLabel": {"message": "Simulation melden via"},
+  "optionsFraudSpamTransportLabel": {"message": "Betrus/Spam-Meldungen erfolgen via"},
+  "optionsSimulationTransportLabel": {"message": "Simulationen melden via"},
   "optionsLucyServerLabel": {"message": "Lucy-Server"},
   "optionsSMTPRecipientLabel": {"message": "E-Mail-Adresse, an die Meldungen gesendet werden"},
   "optionsSMTPExpressiveSubject": {"message": "Mit aussagekräftiger Betreffszeile melden"},

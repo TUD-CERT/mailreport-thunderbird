@@ -88,3 +88,18 @@ export async function addMenuEntry(createData) {
   }
   return id;
 }
+
+/**
+ * Returns an object with telemetry headers to send with requests.
+ * Whether any headers are returned depends on the current plugin settings.
+ */
+export async function generateTelemetryHeaders(settings) {
+  const headers = {};
+  if (settings.send_telemetry) {
+    const agent = await browser.runtime.getBrowserInfo(),
+          platform = await browser.runtime.getPlatformInfo();
+    headers["Reporting-Agent"] = `${agent.name}/${agent.version} @ ${platform.os}/${platform.arch}`;
+    headers["Reporting-Plugin"] = `${browser.runtime.id}/${browser.runtime.getManifest().version}`;
+  }
+  return headers;
+}

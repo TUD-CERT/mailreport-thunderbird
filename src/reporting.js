@@ -6,9 +6,10 @@ import {
   ReportAction,
   ReportResult,
   ReportResultStatus,
-  Transport } from "./models.js";
-import { getSettings } from "./settings.js";
-import { getAccountOfIdentity, getIdentity } from "./utils.js";
+  Transport
+} from "./models.js";
+import {getSettings} from "./settings.js";
+import {generateTelemetryHeaders, getAccountOfIdentity, getIdentity} from "./utils.js";
 
 /**
  * Parses and returns the Subject line from MessagePart and MessageHeader instances.
@@ -160,20 +161,6 @@ async function sendHTTPReport(
 }
 
 /**
- * Returns an object with additional telemetry headers to send with each request
- * (derived from current plugin settings).
- */
-export async function getAdditionalHeaders(settings) {
-  const headers = {};
-  if(settings.send_telemetry) {
-    const agent = await browser.runtime.getBrowserInfo();
-    headers["Reporting-Agent"] = `${agent.name}/${agent.version}`;
-    headers["Reporting-Plugin"] = `${browser.runtime.id}/${browser.runtime.getManifest().version}`;
-  }
-  return headers;
-}
-
-/**
  * Returns a MailFolder of the requested type (string) for the given MailAccount or
  * null, if no folder of that type was found.
  */
@@ -220,7 +207,7 @@ export async function reportFraud(messageID, comment) {
     settings = await getSettings();
     transport = isSimulation ? settings.simulation_transport : settings.phishing_transport;
     parsedComment = comment.length > 0 ? comment : null;
-    additionalHeaders = await getAdditionalHeaders(settings);
+    additionalHeaders = await generateTelemetryHeaders(settings);
 
     if(transport === Transport.HTTP || transport === Transport.HTTPSMTP) {
       let lucyReportURL = `https://${settings.lucy_server}/phishing-report`;
@@ -273,7 +260,7 @@ export async function reportSpam(messageID) {
     message = await parseMessage(messageID);
     settings = await getSettings();
     transport = settings.phishing_transport;
-    additionalHeaders = await getAdditionalHeaders(settings);
+    additionalHeaders = await generateTelemetryHeaders(settings);
 
     if(belongsToSimulation(message)) {
       const result = await reportFraud(messageID, "");

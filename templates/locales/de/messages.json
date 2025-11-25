@@ -17,7 +17,7 @@
   "optionsUpdateCheckNever": {"message": "niemals"},
   "optionsUpdateCheckNow": {"message": "Jetzt prüfen"},
   "optionsUpdateURL": {"message": "Update-URL"},
-  "optionsFraudSpamTransportLabel": {"message": "Betrus/Spam-Meldungen erfolgen via"},
+  "optionsFraudSpamTransportLabel": {"message": "Betrugs/Spam-Meldungen erfolgen via"},
   "optionsSimulationTransportLabel": {"message": "Simulationen melden via"},
   "optionsLucyServerLabel": {"message": "Lucy-Server"},
   "optionsSMTPRecipientLabel": {"message": "E-Mail-Adresse, an die Meldungen gesendet werden"},

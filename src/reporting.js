@@ -122,7 +122,7 @@ function getScenarioID(message) {
 
 /**
  * Tries to send HTTP messages to the given Lucy URLs until one succeeds.
- * Returns a boolean to indicate whether the report was successful.
+ * Throws an exception in case none succeeded.
  */
 async function sendHTTPReport(
     urls,
@@ -151,6 +151,7 @@ async function sendHTTPReport(
         headers: {"Content-Type": "text/plain; Charset=UTF-8", ...additionalHeaders},  // Content-Type taken from the Lucy Outlook AddIn
         body: JSON.stringify(lucyReport)
       });
+      lastSendException = null;
       break;
     } catch(err) {
       console.log("Could not send report via HTTP(S)", err);

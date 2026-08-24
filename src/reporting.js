@@ -9,7 +9,7 @@ import {
   Transport
 } from "./models.js";
 import {getSettings} from "./settings.js";
-import {generateTelemetryHeaders, getAccountOfIdentity, getIdentity} from "./utils.js";
+import {encodeHTML, generateTelemetryHeaders, getAccountOfIdentity, getIdentity, objToStr} from "./utils.js";
 
 /**
  * Parses and returns the Subject line from MessagePart and MessageHeader instances.
@@ -65,7 +65,7 @@ function findPreviewMessagePart(messagePart) {
 async function parseMessage(messageID) {
   const messageHeader = await browser.messages.get(messageID),
       messagePart = await browser.messages.getFull(messageID),
-      messageRaw = await browser.messages.getRaw(messageID, { data_format: "BinaryString" }),
+      messageRaw = await browser.messages.getRaw(messageID, { data_format: "File" }),
       identity = await getIdentity(messageHeader),
       previewPart = findPreviewMessagePart(messagePart);
   const result = new Message();
@@ -80,7 +80,7 @@ async function parseMessage(messageID) {
     result.preview = previewPart.body;
     result.previewType = previewPart.contentType.includes("text/html") ? BodyType.HTML : BodyType.PLAIN;
   } else {
-    result.preview = "";  // Experiment API schema requires strings instead of null
+    result.preview = "";
     result.previewType = BodyType.PLAIN;
   }
   result.raw = messageRaw;
@@ -121,15 +121,15 @@ function getScenarioID(message) {
 }
 
 /**
- * Tries to send HTTP messages to the given Lucy URLs until one succeeds.
+ * Tries to report HTTP messages to the given Lucy URLs until one succeeds.
  * Throws an exception in case none succeeded.
  */
 async function sendHTTPReport(
     urls,
     message,
     additionalHeaders,
-    lucyScenarioID= null,
-    comment= null
+    lucyScenarioID=null,
+    comment=null
 ) {
   const identity = await browser.identities.get(message.reporter);
   const lucyReport = {
@@ -142,8 +142,8 @@ async function sendHTTPReport(
   let lastSendException = null;
   if(lucyScenarioID !== null) lucyReport.scenario_id = lucyScenarioID;
   for(let url of urls) {
-    if("scenario_id" in lucyReport) console.log("Reporting simulation for scenario ", lucyScenarioID, " as ", identity.email, " via HTTP(S) to ", url);
-    else console.log("Reporting phishing mail as ", identity.email, " via HTTP(S) to ", url);
+    if("scenario_id" in lucyReport) console.log("Reporting simulation for scenario", lucyScenarioID, "as", identity.email, "via HTTP(S) to", url);
+    else console.log("Reporting phishing mail as", identity.email, "via HTTP(S) to", url);
     // Send report
     try {
       await fetch(url, {
@@ -159,6 +159,44 @@ async function sendHTTPReport(
     }
   }
   if(lastSendException !== null) throw lastSendException;
+}
+
+/**
+ * Tries to report a message via e-mail. Throws an exception in case of failure.
+ */
+async function sendSMTPReport(
+    destination,
+    subject,
+    lucyClientID,
+    message,
+    additionalHeaders,
+    comment=null
+) {
+  const identity = await browser.identities.get(message.reporter);
+  let body = "",
+      originalMessageDelimiter = "-----Original Message-----<br />",
+      originalMessagePreview = message.preview.replace(/(?:\r\n|\r|\n)/g, "<br />");
+
+  if(message.previewType === BodyType.HTML) {
+    originalMessageDelimiter = "";
+    originalMessagePreview = message.preview;
+  }
+  const commentBody = comment !== null ? `X-More-Analysis: True<br />${encodeHTML(comment)}<br />` : "",
+        lucyClientBody = lucyClientID !== null ? `X-Lucy-Client: ${lucyClientID}<br />` : "",
+        lucyCIBody = lucyClientID !== null ? "X-CI-Report: True<br />" : "";
+  body = `${lucyClientBody}${commentBody}${lucyCIBody}${objToStr(additionalHeaders, "<br />")}<br /><br />${originalMessageDelimiter}From: ${encodeHTML(message.from)}<br />Sent: ${encodeHTML(message.date)}<br />To: ${encodeHTML(message.to)}<br />Subject: ${encodeHTML(message.subject)}<br /><br />${originalMessagePreview}`;
+  console.log("Reporting selected mail via SMTP as", identity.email, "to", destination);
+  await browser.messages.sendMessage({
+    subject: subject,
+    identityId: identity.id,
+    to: destination,
+    attachments: [{
+      file: message.raw,
+      name: "Forwarded message.eml"
+    }],
+    body: body,
+    isPlainText: message.previewType === BodyType.PLAIN
+  });
 }
 
 /**
@@ -228,8 +266,7 @@ export async function reportFraud(messageID, comment) {
     if(transport === Transport.SMTP || transport === Transport.HTTPSMTP) {
       let subject = "Phishing Report";
       if(settings.smtp_use_expressive_subject) subject += `: ${message.subject}`;
-      await browser.mailReport.sendSMTPReport(
-          (await getAccountOfIdentity(message.reporter)).id,
+      await sendSMTPReport(
           settings.smtp_to,
           subject,
           settings.lucy_client_id,
@@ -279,8 +316,7 @@ export async function reportSpam(messageID) {
     }
     let subject = "Spam Report";
     if(settings.smtp_use_expressive_subject) subject += `: ${message.subject}`;
-    await browser.mailReport.sendSMTPReport(
-        (await getAccountOfIdentity(message.reporter)).id,
+    await sendSMTPReport(
         settings.smtp_to,
         subject,
         settings.lucy_client_id,

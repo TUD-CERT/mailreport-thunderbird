@@ -7,8 +7,8 @@
   "applications": {
     "gecko": {
       "id": "phishreport@example.com",
-      "strict_min_version": "115.0",
-      "strict_max_version": "140.*"
+      "strict_min_version": "153.0",
+      "strict_max_version": "*"
     }
   },
   "default_locale": "en",
@@ -32,21 +32,5 @@
     "type": "button"
   },
   "permissions": ["accountsRead", "menus", "messagesMove", "messagesRead", "storage", "tabs", "<all_urls>"],
-  "optional_permissions": ["messages.send"],
-  "experiment_apis": {
-    "mailReport": {
-      "schema": "schema.json",
-      "parent": {
-        "scopes": [
-          "addon_parent"
-        ],
-        "paths": [
-          [
-            "mailReport"
-          ]
-        ],
-        "script": "legacy.js"
-      }
-    }
-  }
+  "optional_permissions": ["messages.send"]
 }

@@ -103,3 +103,21 @@ export async function generateTelemetryHeaders(settings) {
   }
   return headers;
 }
+
+/**
+ * Returns a string representation of the given object as "key1: val1<delimiter>key2: val2<delimiter>...".
+ * The result doesn't end with a delimiter.
+ */
+export function objToStr(source, delimiter) {
+  let result = "";
+  for(let key in source) result += `${key}: ${source[key]}${delimiter}`;
+  return result;
+}
+
+/**
+ * Encodes various characters to their safe HTML counterparts. Used to prevent HTML interpretation of
+ * E-Mail headers such as "Name <name@example.com>".
+ */
+export function encodeHTML(str) {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}

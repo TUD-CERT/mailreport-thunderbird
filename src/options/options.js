@@ -32,6 +32,9 @@ class OptionsForm {
     this.httpElements = document.querySelectorAll(".http");
     this.lucyClientIDInput = document.querySelector("#lucy_client_id");
     this.lucyServerInput = document.querySelector("#lucy_server");
+    this.permissionsGrantedContainer = document.querySelector("#permissions_granted");
+    this.permissionsMissingContainer = document.querySelector("#permissions_missing");
+    this.permissionsRequestButton = document.querySelector("#permissions_request");
     this.phishingTransportDropdown = document.querySelector("#phishing_transport");
     this.simulationTransportDropdown = document.querySelector("#simulation_transport");
     this.reportActionDropdown = document.querySelector("#report_action");
@@ -80,6 +83,13 @@ class OptionsForm {
         action: "check_update",
         url: this.updateURLInput.value});
     });
+    // Permission handlers
+    this.permissionsRequestButton.addEventListener("click", async () => {
+      await browser.permissions.request({
+        permissions: ["messages.send"]
+      });
+      await this.updatePermissionStatus();
+    });
   }
 
   /**
@@ -102,6 +112,22 @@ class OptionsForm {
     if(this.updateURLInput.checkValidity() && this.updateURLInput.value.length > 0)
       this.updateCheckButton.classList.remove("hide");
     else this.updateCheckButton.classList.add("hide");
+  }
+
+  /**
+   * Depending on the currently granted plugin permissions, shows
+   * either a request to grant missing permissions or a notification
+   * that all required permissions have been granted.
+   */
+  async updatePermissionStatus() {
+    const permissions = (await browser.permissions.getAll()).permissions;
+    if(permissions.includes("messages.send")) {
+      this.permissionsGrantedContainer.classList.remove("hide");
+      this.permissionsMissingContainer.classList.add("hide");
+    } else {
+      this.permissionsGrantedContainer.classList.add("hide");
+      this.permissionsMissingContainer.classList.remove("hide");
+    }
   }
 
   /**
@@ -206,6 +232,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   form.restore(settings);
   form.showPermittedElements(settings);
   form.updateUpdateNowButtonVisibility()
+  await form.updatePermissionStatus();
 });
 
 localizeDocument();

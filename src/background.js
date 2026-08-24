@@ -1,7 +1,7 @@
-import {MoveMessageStatus, ReportDialogView, ReportResultStatus, UpdateCheck} from "./models.js";
+import {MoveMessageStatus, ReportabilityIssue, ReportDialogView, ReportResultStatus, UpdateCheck} from "./models.js";
 import {checkMessageReportability, reportFraud, reportSpam} from "./reporting.js";
-import { getSettings } from "./settings.js";
-import { checkForUpdate } from "./update.js";
+import {getSettings} from "./settings.js";
+import {checkForUpdate} from "./update.js";
 import {addMenuEntry, generateTelemetryHeaders, getCurrentMessageID, promiseWithResolvers} from "./utils.js";
 
 let reportViewPort = null,
@@ -179,6 +179,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
     const actionAPI = settings.use_toolbar_button ? "browserAction" : "messageDisplayAction";
     browser.menus.onClicked.addListener(async (info, tab) => {
+      // In case we lack optional permissions, prompt for them
+      const granted = await browser.permissions.request({
+        permissions: ["messages.send"]
+      });
       browser[actionAPI].openPopup();
       if(info.menuItemId === "report-spam") {
         await reportViewConnected();

@@ -32,6 +32,7 @@
     "type": "button"
   },
   "permissions": ["accountsRead", "menus", "messagesMove", "messagesRead", "storage", "tabs", "<all_urls>"],
+  "optional_permissions": ["messages.send"],
   "experiment_apis": {
     "mailReport": {
       "schema": "schema.json",

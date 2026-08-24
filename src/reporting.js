@@ -298,13 +298,25 @@ export async function reportSpam(messageID) {
 }
 
 /**
- * Checks whether a report for the given message ID is permitted by retrieving the associated account's
- * identities and validating it against the given list of permitted domains. In addition, messages without
- * an associated identity (such as "external" messages) are not reportable.
+ * Performs various checks to figure out whether the currently selected message can be reported.
+ * Returns ReportabilityIssue.NONE on success or one of the other error codes in case of issues.
+ *
+ * These issues are checked:
+ * - Whether the plugin has (optional) permission to send messages in case one of the transports
+ *   is configured as SMTP.
+ * - Whether the message has an associated identity. "External" messages opened from a file lack
+ *   that property.
+ * - Whether a report for the given message ID is permitted by retrieving the associated account's
+ *   identities and validating it against the given list of permitted domains
  */
 export async function checkMessageReportability(messageID, permittedDomains) {
   const message = await browser.messages.get(messageID),
-        identity = await getIdentity(message);
+        identity = await getIdentity(message),
+        settings = await getSettings(),
+	permissions = (await browser.permissions.getAll()).permissions;
+  // Check granted permissions
+  if((settings.phishing_transport !== Transport.HTTP || settings.simulation_transport !== Transport.HTTP) && !permissions.includes("messages.send"))
+    return ReportabilityIssue.PERMISSIONS;
   // Pseudo accounts such as "Local Folders" and "external" messages don't have associated identities
   if(identity === null) return ReportabilityIssue.TYPE;
   // If no permitted domains are configured, reporting is always permitted

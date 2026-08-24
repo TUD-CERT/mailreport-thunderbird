@@ -14,6 +14,7 @@ export const ReportDialogView = {
   QUERY: ".query",
   PENDING: ".pending",
   SUCCESS: ".success",
+  PERMISSIONS: ".permissions",
   ERROR: ".error",
   FORBIDDEN: ".forbidden",
   UNREPORTABLE: ".unreportable"
@@ -26,8 +27,9 @@ export const ReportDialogAction = {
 
 export const ReportabilityIssue = {
   NONE: null,
-  FORBIDDEN: "FORBIDDEN",  // Message can't be reported due to permission issues
-  TYPE: "TYPE"             // Message can't be reported due to its type (e.g. "external" messages)
+  FORBIDDEN: "FORBIDDEN",     // Message can't be reported due to permission issues
+  TYPE: "TYPE",               // Message can't be reported due to its type (e.g. "external" messages)
+  PERMISSIONS: "PERMISSIONS"  // Message can't be reported due to a lack of permissions
 }
 
 export const ReportResultStatus = {

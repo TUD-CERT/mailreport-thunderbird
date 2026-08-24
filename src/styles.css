@@ -1,6 +1,6 @@
 .hide {display: none !important}
 .success {color: forestgreen; font-weight: bold; margin: 1em}
-.error {color: crimson; font-weight: bold; margin: 1em}
+.error, .permissions {color: crimson; font-weight: bold; margin: 1em}
 * {box-sizing: border-box}
 html {background: var(--background-color-box) !important}
 body.report {
@@ -26,6 +26,11 @@ form input[type="checkbox"] {margin-left: 0}
 input[type="checkbox"] + label {position: relative; top: -2px}
 button {width: 100%; text-align: center}
 button.inline {width: auto}
+svg.icon {
+  width: 20px;
+  height: 20px;
+  vertical-align: center;
+}
 body.dialog {display: grid; align-content: center; justify-content: center; width: 100vw; height: 100vh; margin: 0; padding: .5rem 1rem .5rem .5rem}
 body.dialog p {margin-block-start: 0; text-align: center; padding: 0 1em}
 #spinner {border: 0.4rem solid lightgrey; border-top: 0.4rem solid dimgrey; border-radius: 50%; width: 1rem; height: 1rem; animation: spin 2s linear infinite}

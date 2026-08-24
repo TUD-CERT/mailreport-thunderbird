@@ -10,6 +10,22 @@
   <body class="options">
     <form>
       <div>
+        <div id="permissions_missing" class="hide">
+          <label for="permissions_request">__MSG_optionsPermissionsMissing__&nbsp;</label>
+          <button type="button" id="permissions_request" class="inline">__MSG_optionsPermissionsRequest__</button>
+        </div>
+        <div id="permissions_granted" class="hide">
+          <p>
+            __MSG_optionsPermissionsGranted__
+            <svg class="icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3.5 8.5 L6.5 11.5 L12.5 4.5" fill="none" stroke="#107c41" stroke-width="2.5"
+    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </p>
+        </div>
+      </div>
+
+      <div>
         <label for="report_action">__MSG_optionsActionLabel__&nbsp;</label>
         <select id="report_action">
           <option value="junk">__MSG_optionsActionJunk__</option>

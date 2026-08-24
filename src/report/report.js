@@ -47,6 +47,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     case ReportabilityIssue.TYPE:
       showView(ReportDialogView.UNREPORTABLE);
       break;
+    case ReportabilityIssue.PERMISSIONS:
+      showView(ReportDialogView.PERMISSIONS);
+      break;
   }
   // Displays the reporting action depending on current settings
   const $reportAction = document.querySelector("span.reportAction");

@@ -3,7 +3,7 @@
   "name": "Phishing Report Button",
   "description": "__MSG_extensionDescription__",
   "version": "0",
-  "author": "Leonard Zurek, Pascal Brückner",
+  "author": "Pascal Valtin, TUD-CERT",
   "applications": {
     "gecko": {
       "id": "phishreport@example.com",

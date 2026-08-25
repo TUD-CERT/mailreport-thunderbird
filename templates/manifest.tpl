@@ -7,8 +7,7 @@
   "applications": {
     "gecko": {
       "id": "phishreport@example.com",
-      "strict_min_version": "153.0",
-      "strict_max_version": "*"
+      "strict_min_version": "153.0"
     }
   },
   "default_locale": "en",

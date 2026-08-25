@@ -4,23 +4,23 @@ Mozilla Thunderbird plugin for reporting phishing or otherwise malicious E-Mails
 ## Features
 ![Plugin screenshot](docs/plugin.png?raw=true "The plugin in action")
 * Support for reports via SMTP (summary mail with reported raw sample attached) or HTTP(S) to a [Lucy](https://lucysecurity.com)-compatible API (or both)
+* Distinction between phishing/fraud and Spam reporting (optional)
 * User-provided optional comment for each report
 * Configurable after-report action: move to junk/move to bin/keep mail
 * Localization in English and German
 * Respects selected UI theme
-* Automatic update notifications
+* Automatic update notifications (when not distributing via [addons.thunderbird.net](https://addons.thunderbird.net))
 * Quickly adjustable organization-specific deployment settings
-* Basic telemetry to report current plugin and MUA versions with each request
-* Permission settings to disable unwanted features
+* Basic telemetry to send current plugin and MUA versions with each report
 * [Lucy](https://lucysecurity.com) phishing campaign detection
 
 ## Requirements
-The plugin is compatible with Thunderbird 115 up to 140 on Linux, Windows and macOS.
+The plugin requires at least Thunderbird 153 on Linux, Windows and macOS.
 
 The project build script `make.py` requires at least Python 3.8.
 
 ## Technical Overview
-This plugin adds an e-mail report button to either the main Thunderbird toolbar (near the top of the window) or to each individual message window, right next to the *"Reply"* and *"Forward"* buttons. When clicked, the currently selected e-mail can be reported either as being malicious or spam. Please note that spam reporting is strictly optional and can be disabled when building the plugin. Reporting a malicious e-mail opens a popup that enables users to attach an (optional) comment to their report. In contrast, reporting e-mails as spam happens immediately and can't be commented. In both cases, a popup informs users of the current status: Whether the report is still in progress, was successful or ended up in an error.
+This plugin adds an e-mail report button to either the main Thunderbird toolbar (near the top of the window) or to each individual message window, right next to the *"Reply"* and *"Forward"* buttons. It requires permission to send e-mails in the background, which can be granted either on first usage or in the plugin's settings. When a report button is clicked, the currently selected e-mail can be reported either as being malicious or spam. Please note that spam reporting is strictly optional and can be disabled when building the plugin. Reporting a malicious e-mail opens a popup that enables users to attach an (optional) comment to their report. In contrast, reporting e-mails as spam happens immediately and can't be commented. In both cases, a popup informs users of the current status: Whether the report is still in progress, was successful or ended up in an error.
 
 Reports can be sent either via e-mail/SMTP to a configurable reporting address or to a server that provides a [Lucy](https://lucysecurity.com)-compatible API (or both). The subjects of reports sent via SMTP use either `Phishing Report` or `Spam Report` as prefix to differentiate between the reporting options. Attached comments and basic telemetry (if enabled) are prepended to the e-mail body, while a raw sample of the reported e-mail is added as an attachment. The Lucy API doesn't support spam reports.
 
@@ -177,4 +177,4 @@ The received update JSON document should have the following structure:
 **Notice**: This is just a notification mechanism to inform users about an updated version in case this plugin isn't distributed via the official Mozilla Add-On repository. Users still have to download and install the new plugin manually - the URL returned from the update server is just meant to instruct them on how to perform the update.
 
 ## Known Issues
-* **Encrypted E-Mails**: The MailExtensions API this plugin is built upon currently doesn't support reading decrypted contents of encrypted mails. Therefore, encrypted mails reported with this plugin will contain no preview and have the encrypted mail attached as-is (in raw encrypted form). For a discussion on this, see [here](https://thunderbird.topicbox.com/groups/addons/Tf9725ba63ee6871f/tb-add-on-developers-re-web-ext-how-to-decrypt-a-application-pkcs7-mime-part).
+* **Encrypted E-Mails**: The MailExtensions API this plugin is built upon currently doesn't support reading decrypted contents of encrypted mails. Therefore, encrypted mails reported with this plugin will contain no preview and have the encrypted mail attached as-is (in raw encrypted form). For a discussion on this, click [here](https://thunderbird.topicbox.com/groups/addons/Tf9725ba63ee6871f/tb-add-on-developers-re-web-ext-how-to-decrypt-a-application-pkcs7-mime-part).

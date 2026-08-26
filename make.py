@@ -14,6 +14,7 @@ import shutil
 import subprocess
 import sys
 from typing import Dict
+from urllib.parse import urlparse
 import zipfile
 
 DEFAULTS_TPL = "templates/defaults.tpl"
@@ -77,6 +78,11 @@ def create_manifest(template: Dict, overrides: Dict, config: Dict) -> Dict:
   action = "browser_action" if config["use_toolbar_button"] else "message_display_action"
   manifest[action] = manifest.pop("action")
   manifest[action]["type"] = "menu" if config["spam_report_enabled"] else "button"
+  if len(config["lucy_server"]) > 0:
+    manifest["permissions"].append(f"*://{config['lucy_server']}/*")
+  if len(config["update_url"]) > 0:
+    update_server = urlparse(config["update_url"]).hostname
+    manifest["permissions"].append(f"*://{update_server}/*")
   return manifest
 
 

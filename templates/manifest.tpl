@@ -30,6 +30,6 @@
     "default_icon" : "images/app_16.png",
     "type": "button"
   },
-  "permissions": ["accountsRead", "menus", "messagesMove", "messagesRead", "storage", "tabs", "<all_urls>"],
+  "permissions": ["accountsRead", "menus", "messagesMove", "messagesRead", "storage", "tabs"],
   "optional_permissions": ["messages.send"]
 }

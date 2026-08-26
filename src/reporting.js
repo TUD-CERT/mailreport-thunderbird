@@ -88,25 +88,18 @@ async function parseMessage(messageID) {
 }
 
 /**
- * Checks the given MessagePart for Lucy headers that indicate the mail is part of a phishing simulation.
+ * Checks the given MessagePart for Lucy headers that indicate the mail is part
+ * of a phishing simulation that was launched from the given Lucy server.
  */
-function belongsToSimulation(messagePart) {
-  for(let key in messagePart.headers) {
-    if(key.toLowerCase().startsWith("x-lucy")) return true;
-  }
-  return false;
-}
-
-/**
- * Parses Lucy mail headers and returns an array of reporting URLs.
- */
-function getReportingURLs(message) {
-  const urls = [];
+function belongsToSimulation(message, lucy_server) {
   for(let key in message.headers) {
     key = key.toLowerCase();
-    if(key.includes("x-lucy") && key.includes("victimurl")) urls.push(message.headers[key][0]);
+    if(key.startsWith("x-lucy") && key.includes("victimurl")) {
+      const reportURL = new URL(message.headers[key][0]);
+      if(reportURL.hostname === lucy_server) return true;
+    }
   }
-  return urls;
+  return false;
 }
 
 /**
@@ -241,9 +234,9 @@ export async function reportFraud(messageID, comment) {
       parsedComment,
       additionalHeaders;
   try {
-    message = await parseMessage(messageID);
-    isSimulation = belongsToSimulation(message);
     settings = await getSettings();
+    message = await parseMessage(messageID);
+    isSimulation = belongsToSimulation(message, settings.lucy_server);
     transport = isSimulation ? settings.simulation_transport : settings.phishing_transport;
     parsedComment = comment.length > 0 ? comment : null;
     additionalHeaders = await generateTelemetryHeaders(settings);
@@ -252,11 +245,8 @@ export async function reportFraud(messageID, comment) {
       let lucyReportURL = `https://${settings.lucy_server}/phishing-report`;
       if(settings.lucy_client_id !== null) lucyReportURL += `/${settings.lucy_client_id}`;
       const lucyScenarioID = isSimulation ? getScenarioID(message) : null;
-      let urls = isSimulation ? getReportingURLs(message) : [lucyReportURL];
-      // If invalid Lucy headers are set, fall back to the configured Lucy instance
-      if(urls.length === 0) urls = [lucyReportURL];
       await sendHTTPReport(
-          urls,
+          [lucyReportURL],
           message,
           additionalHeaders,
           lucyScenarioID,
@@ -300,7 +290,7 @@ export async function reportSpam(messageID) {
     transport = settings.phishing_transport;
     additionalHeaders = await generateTelemetryHeaders(settings);
 
-    if(belongsToSimulation(message)) {
+    if(belongsToSimulation(message, settings.lucy_server)) {
       const result = await reportFraud(messageID, "");
       // Users expect reported spam mails to be moved away even if ReportAction is KEEP
       if (settings.report_action === ReportAction.KEEP) {

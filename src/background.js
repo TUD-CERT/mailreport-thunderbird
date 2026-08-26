@@ -144,7 +144,9 @@ window.addEventListener("message", async (e) => {
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const settings = await getSettings();
+  const settings = await getSettings(),
+        manifest = await browser.runtime.getManifest(),
+        actionAPI = manifest.browser_action != null ? "browserAction" : "messageDisplayAction";
 
   // Check for updates on startup (if configured to do so)
   setTimeout(async () => {
@@ -177,7 +179,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       },
       title: browser.i18n.getMessage("menuSpamReportLabel")
     })
-    const actionAPI = settings.use_toolbar_button ? "browserAction" : "messageDisplayAction";
     browser.menus.onClicked.addListener(async (info, tab) => {
       // In case we lack optional permissions, prompt for them
       const granted = await browser.permissions.request({
@@ -192,7 +193,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // In case a global toolbar report button is used ("browser action"), add event listeners to enable/disable it depending on UI state
-  if((await getSettings()).use_toolbar_button) {
+  if(actionAPI === "browserAction") {
     // Enable the reporting button if a single E-Mail is selected
     browser.mailTabs.onSelectedMessagesChanged.addListener((tab, m) => {
       m.messages.length === 1 ? browser.browserAction.enable() : browser.browserAction.disable();

@@ -29,6 +29,7 @@
   "reportCommentJunk": {"message": "Sie wird anschließend in Ihr Junk-Verzeichnis verschoben."},
   "reportCommentTrash": {"message": "Sie wird anschließend gelöscht."},
   "reportCommentPlaceholder": {"message": "Kommentar (optional)"},
+  "reportTelemetry": {"message": "Um eventuelle Probleme zu diagnostizieren, beinhaltet diese Meldung Ihre Thunderbird- und Betriebssystemversion."},
   "reportSubmit": {"message": "Meldung abschicken"},
   "reportWait": {"message": "Melde"},
   "reportSuccess": {"message": "Vielen Dank für Ihre Meldung"},

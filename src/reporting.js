@@ -239,7 +239,7 @@ export async function reportFraud(messageID, comment) {
     isSimulation = belongsToSimulation(message, settings.lucy_server);
     transport = isSimulation ? settings.simulation_transport : settings.phishing_transport;
     parsedComment = comment.length > 0 ? comment : null;
-    additionalHeaders = await generateTelemetryHeaders(settings);
+    additionalHeaders = await generateTelemetryHeaders(settings, true);
 
     if(transport === Transport.HTTP || transport === Transport.HTTPSMTP) {
       let lucyReportURL = `https://${settings.lucy_server}/phishing-report`;
@@ -288,7 +288,7 @@ export async function reportSpam(messageID) {
     message = await parseMessage(messageID);
     settings = await getSettings();
     transport = settings.phishing_transport;
-    additionalHeaders = await generateTelemetryHeaders(settings);
+    additionalHeaders = await generateTelemetryHeaders(settings, false);
 
     if(belongsToSimulation(message, settings.lucy_server)) {
       const result = await reportFraud(messageID, "");

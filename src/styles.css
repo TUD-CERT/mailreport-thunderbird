@@ -8,6 +8,7 @@ body.report {
 }
 body.report > div {display: grid; grid-template-columns: max-content max-content; justify-content: center; align-items: center; column-gap: 1em}
 body.report p {margin-left: 4px} /* Left-align paragraph with TB-styled form inputs */
+body.report p.telemetry {font-size: 12px;}
 body.report div.moveMessageFailed strong {color: crimson; font-weight: bold}
 body.options {
     min-height: 10rem; /* Vertical space for select dropdowns */

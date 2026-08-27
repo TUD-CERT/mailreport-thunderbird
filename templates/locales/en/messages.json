@@ -29,6 +29,7 @@
   "reportCommentJunk": {"message": "It will then be moved to your junk folder."},
   "reportCommentTrash": {"message": "It will then be deleted."},
   "reportCommentPlaceholder": {"message": "Optional comment"},
+  "reportTelemetry": {"message": "To diagnose potential issues, this report includes your Thunderbird and OS versions."},
   "reportSubmit": {"message": "Send report"},
   "reportWait": {"message": "Sending report"},
   "reportSuccess": {"message": "Thanks for your report!"},

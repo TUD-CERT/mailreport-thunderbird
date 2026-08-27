@@ -2,7 +2,7 @@ import {MoveMessageStatus, ReportabilityIssue, ReportDialogView, ReportResultSta
 import {checkMessageReportability, reportFraud, reportSpam} from "./reporting.js";
 import {getSettings} from "./settings.js";
 import {checkForUpdate} from "./update.js";
-import {addMenuEntry, generateTelemetryHeaders, getCurrentMessageID, promiseWithResolvers} from "./utils.js";
+import {addMenuEntry, getCurrentMessageID, promiseWithResolvers} from "./utils.js";
 
 let reportViewPort = null,
     reportViewConnectedPromise = null,
@@ -138,7 +138,7 @@ window.addEventListener("message", async (e) => {
   switch(e.data.action) {
     case "check_update":
       let settings = await getSettings();
-      await checkForUpdate(e.data.url, await generateTelemetryHeaders(settings), true);
+      await checkForUpdate(e.data.url, {}, true);
       break;
   }
 });
@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   setTimeout(async () => {
     if(settings.update_check === UpdateCheck.STARTUP) {
       console.log("Performing automatic update check");
-      await checkForUpdate(settings.update_url, await generateTelemetryHeaders(settings));
+      await checkForUpdate(settings.update_url, {});
     }
   }, 5000);
 
